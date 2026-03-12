@@ -1,5 +1,5 @@
 <div align="center">
-  <img height="200" src="https://s.iimg.su/s/09/gGA083Mxfgv4jDRa4RJ6fFhjQ27Gp2WY2ejBWpcW.png"  />
+  <img height="200" src="https://i.imgur.com/WHRggSV.png"  />
 </div>
 <div align="center">
   <a href="https://github.com/Nello2">
@@ -100,6 +100,7 @@
 2.  Создайте новую ветку для вашей функции или исправления ошибки.
 3.  Реализуйте свои изменения, обеспечивая качество кода и добавляя соответствующие тесты.
 4.  Отправьте pull request с четким описанием ваших изменений.
+
 
 
 
