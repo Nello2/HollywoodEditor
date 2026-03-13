@@ -19,29 +19,55 @@ namespace HollywoodEditor.ViewModels
         }
     }
 
+    // Добавленны дополнительные конвертеры для хорошей взамиосвязи с формами. 
+    public class NotNullToBoolConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        return value != null;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        return DependencyProperty.UnsetValue;
+    }
+}
     public class LangStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string str = (string)value;
-            if (str == "COM" | str == "ART")
-                str = $"STATUS_{str}_SORT";
-            if (str == "INDOOR" | str == "OUTDOOR")
-                str = $"SKILL_{str}_SORT";
-
-            string str_out = MainModel.LocaleTranslator.ContainsKey(str) ? MainModel.LocaleTranslator[str] : str;
-
-            if (str_out != null)
+            try
             {
-                if (str_out.Contains("PROFESSION_"))
-                    return str_out.Replace("PROFESSION_", "").ToLower();
-                else if (str_out == "PL")
-                    return MainModel.MyStudio;
-            }
+                string str = value as string;
+                if (string.IsNullOrEmpty(str))
+                    return str;
 
-            if (string.IsNullOrWhiteSpace(str_out))
-                return str;
-            return str_out;
+                string originalStr = str;
+
+                if (str == "COM" || str == "ART")
+                    str = $"STATUS_{str}_SORT";
+                if (str == "INDOOR" || str == "OUTDOOR")
+                    str = $"SKILL_{str}_SORT";
+
+                string str_out = str;
+                if (MainModel.LocaleTranslator != null && MainModel.LocaleTranslator.ContainsKey(str))
+                    str_out = MainModel.LocaleTranslator[str];
+
+                if (str_out != null)
+                {
+                    if (str_out.Contains("PROFESSION_"))
+                        return str_out.Replace("PROFESSION_", "").ToLower();
+                    else if (str_out == "PL")
+                        return MainModel.MyStudio ?? "PL";
+                }
+
+                return string.IsNullOrWhiteSpace(str_out) ? originalStr : str_out;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Converter error: {ex}");
+                return value?.ToString() ?? "";
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

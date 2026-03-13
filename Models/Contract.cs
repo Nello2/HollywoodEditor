@@ -9,6 +9,7 @@ using PropertyChanged;
 namespace HollywoodEditor.Models
 {
     [AddINotifyPropertyChangedInterface]
+    // Улучшена совместимость под 0.8.68EA
     public class Contract
     {
         private int daysLeft;
@@ -43,6 +44,7 @@ namespace HollywoodEditor.Models
                 }
             }
         }
+        // Улучшена совместимость!
         public int startAmount { get; set; }
         public double initialFee { get; set; }
         public double monthlySalary { get; set; }
@@ -131,7 +133,6 @@ namespace HollywoodEditor.Models
                 daysLeft = value;
             }
         }
-
         public void SetCalcDaysLeft()//DateTime now)
         {
             var t = dateOfEnding;

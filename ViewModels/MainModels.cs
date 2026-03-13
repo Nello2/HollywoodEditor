@@ -49,6 +49,7 @@ namespace HollywoodEditor.ViewModels
         private Character selectedChar;
         private string filter_Prof;
         private string filter_studio;
+        // Под 0.8.68EA
         private ObservableCollection<Character> filtered_Obj;
         private bool showOnlyTalent = false;
         private bool showOnlyDead = false;
@@ -150,6 +151,7 @@ namespace HollywoodEditor.ViewModels
             }
         }
 
+        //распаковщик
         public MainModel()
         {
             Filter_txt = "";
@@ -193,6 +195,8 @@ namespace HollywoodEditor.ViewModels
         // Пришлось полностью менять логику на распаковку .zip файлов.
         // Улучшена совместимость для 0.8.55EA
         // Вдобавок пришлоось отказаться от иконок персонажей, так как занимало очень много место.
+        // Update 13.03.2026: Был полностью удален код, который позволял редактору распаковывать изображения персонажей, что пришлось это отдельно переносить в SE;
+        // Это было сделано для хорошей оптимизации, потому что формы из-за этого зависали/заедали.
         public async void UnzipResources()
         {
             try
@@ -201,10 +205,9 @@ namespace HollywoodEditor.ViewModels
                 {
                     string mi = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources");
                     string local_dir = Path.Combine(mi, "Localization");
-                    string prof_dir = Path.Combine(mi, "Profiles");
 
                     bool arch_loc_exist = File.Exists(Path.Combine(mi, "Localization.zip"));
-                    bool arch_prof_exits = File.Exists(Path.Combine(mi, "Profiles.yz"));
+
 
                     if (arch_loc_exist)
                     {
@@ -217,13 +220,6 @@ namespace HollywoodEditor.ViewModels
                         StatusBarText = "Set Localization";
                         SetLocale(Path.Combine(mi, "Localization", "RUS"));
                     }
-                    if (arch_prof_exits)
-                        if (!Directory.Exists(prof_dir))
-                        {
-                            StatusBarText = "Start extracting Profile images";
-                            ExtractZipFile(Path.Combine(mi, "Profiles.yz"), prof_dir);
-                            StatusBarText = "End extracting Profile images";
-                        }
                 });
             }
             catch (Exception ex)
@@ -312,6 +308,8 @@ namespace HollywoodEditor.ViewModels
                 (obj) => true));
             }
         }
+
+        // В дальнейшем надо это проверить, потому что могут возникнуть ошибки при новой версии!
         public CommandHandler SaveCmd
         {
             get
@@ -549,10 +547,19 @@ namespace HollywoodEditor.ViewModels
         }
         #endregion
         #region locale
+        private static readonly object _localeLock = new object();
+
         private async void SetLocale(string path)
         {
             try
             {
+                lock (_localeLock)
+                {
+                    // Предотвращаем повторную загрузку
+                    if (LocaleNames.Count > 0 && LocaleTranslator.Count > 0)
+                        return;
+                }
+
                 await LoadNamesFromJson(path);
                 await LoadLocaleFromJson(path);
                 StatusBarText = "Loaded jsons";
@@ -593,11 +600,26 @@ namespace HollywoodEditor.ViewModels
                 var map = JObject.Parse(json).SelectToken("IdMap");
                 var local = JObject.Parse(json).SelectToken("locStrings");
                 List<string> getout = JsonConvert.DeserializeObject<List<string>>(local.ToString());
-                LocaleTranslator = new Dictionary<string, string>();
+
+                var newDict = new Dictionary<string, string>();
                 foreach (var item in map.Children<JProperty>())
                 {
-                    LocaleTranslator.Add(item.Name, getout[item.Value.ToObject<int>()]);
+                    string key = item.Name;
+                    string value = getout[item.Value.ToObject<int>()];
+
+                    // Проверяем, нет ли уже такого ключа
+                    if (!newDict.ContainsKey(key))
+                    {
+                        newDict.Add(key, value);
+                    }
+                    else
+                    {
+                        // Логируем или игнорируем дубликат
+                        System.Diagnostics.Debug.WriteLine($"Duplicate key found: {key}");
+                    }
                 }
+
+                LocaleTranslator = newDict;
             }
             catch (Exception ex)
             {
@@ -612,12 +634,19 @@ namespace HollywoodEditor.ViewModels
                 string json = await Task.Run(() => File.ReadAllText(path));
                 var dt = JObject.Parse(json).SelectToken("locStrings");
                 List<string> names = JsonConvert.DeserializeObject<List<string>>(dt.ToString());
-                LocaleNames = new Dictionary<string, string>();
+
+                var newDict = new Dictionary<string, string>();
                 int ii = 0;
                 foreach (var t in names)
                 {
-                    LocaleNames.Add(ii++.ToString(), t);
+                    string key = ii++.ToString();
+                    if (!newDict.ContainsKey(key))
+                    {
+                        newDict.Add(key, t);
+                    }
                 }
+
+                LocaleNames = newDict;
             }
             catch (Exception ex)
             {
