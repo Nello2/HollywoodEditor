@@ -18,121 +18,104 @@
 </p>
 
 # Hollywood Editor
-Обновленный инструмент для безопасного редактирования файлов сохранений игры Hollywood Animal.
-## Премечание
-Данный проект является преемником проекта [HollyJson](https://github.com/BioNoob/HollyJson?ysclid=mgk0zm7rb6682119807), первоначально разработанного [BioNoob (Yakor)](https://github.com/BioNoob). 
-После передачи исходного кода и прекращения активной разработки оригинальным автором, проект был взят [мной](https://github.com/Nello2) на поддержку и дальнейшее развитие.
-## Возможности и функциональность
+An updated tool for safely editing save files of the game Hollywood Animal.
 
-*   **Редактирование файлов сохранений:** Позволяет пользователям открывать и изменять файлы сохранений в формате JSON.
-*   **Управление персонажами:** Предоставляет функциональность для просмотра, фильтрации и редактирования атрибутов персонажей, включая:
-    *   Основная информация: Имя, возраст, портрет.
-    *   Атрибуты: Настроение, отношение, лимит.
-    *   Детали контракта: Изменение условий контракта, зарплаты, даты подписания и т.д.
-    *   Навыки и черты: Добавление или удаление навыков и черт.
-    *   Принадлежность к студии: Изменение студии, к которой привязан персонаж.
-*   **Проверка данных:** Реализована проверка вводимых данных для обеспечения целостности таких полей, как возраст, числа с плавающей точкой и строки.
-*   **Поддержка локализации:** Читает данные локализации из JSON-файлов для отображения переведённых названий и описаний.
-*   **Управление ресурсами:** Извлекает файлы ресурсов (изображения, локализация) из сжатых архивов при запуске.
-*   Редактирование файлов сохранений: Позволяет пользователям открывать и изменять файлы сохранений в формате JSON. Поддерживает загрузку сохранений из стандартной папки профилей игры (LocalLow\Weappy\Hollywood Animal\Saves\Profiles) и сохранение изменений с сохранением полной структуры данных. При загрузке отображается прогресс в статусной строке с указанием количества обработанных персонажей.
-*   **Управление исследованиями (Study Manager):** Предоставляет древовидное представление всех доступных и открытых исследований, сгруппированных по отделам (TECH, PRODUCTION, LEGAL, HR, PR, SCRIPT, PREPROD, SECURITY, COMFORT, DISTRIBUTION, POST, FINANCE). Каждый отдел отображается с указанием текущего уровня прогресса. Открытые исследования подсвечиваются зеленым цветом, закрытые — красным. Реализована система зависимостей: при попытке открыть технологию без выполнения требований отображается информационное сообщение. Поддерживается массовое открытие всех доступных исследований и закрытие всех открытых с выводом уведомления о количестве изменений. При закрытии исследования автоматически закрываются все зависимые от него технологии.
+## Note
+This project is a continuation of the project [HollyJson](https://github.com/BioNoob/HollyJson?ysclid=mgk0zm7rb6682119807), originally developed by [BioNoob (Yakor)](https://github.com/BioNoob).  
+After the transfer of the source code and cessation of active development by the original author, the project was taken over by [me](https://github.com/Nello2) for maintenance and further development.
 
-*   **Управление тегами (Tags Manager):** Предоставляет двухпанельный интерфейс для управления открытыми и закрытыми тегами. Закрытые теги отображаются в левой панели с красной подсветкой, открытые — в правой с зеленой. Поддерживается множественный выбор для массового открытия или закрытия тегов. Реализованы кнопки быстрых операций: "Open All", "Close All", а также перемещение выбранных элементов между панелями.
+## Features and Functionality
 
-*   **Редактирование портретов (Select Portrait):** Позволяет изменять портрет персонажа с автоматическим определением категории на основе профессии (TALENT, AGENT, LIEUT). Поддерживается фильтрация по полу и возрастной категории (YOUNG, MID, OLD). Реализована пагинация для удобной навигации по большому количеству изображений. При загрузке окна автоматически подсвечивается текущий портрет персонажа. Функционал базируется на наработках из специальной версии 0.2.3S.B, адаптированных для актуальной версии игры.
+*   **Save File Editing:** Allows users to open and modify save files in JSON format.
+*   **Character Management:** Provides functionality to view, filter, and edit character attributes, including:
+    *   Basic Information: Name, age, portrait.
+    *   Attributes: Mood, attitude, limit.
+    *   Contract Details: Modify contract terms, salary, signing date, etc.
+    *   Skills and Traits: Add or remove skills and traits.
+    *   Studio Affiliation: Change the studio the character is bound to.
+*   **Data Validation:** Implements input data validation to ensure integrity for fields such as age, floating-point numbers, and strings.
+*   **Localization Support:** Reads localization data from JSON files to display translated names and descriptions.
+*   **Resource Management:** Extracts resource files (images, localization) from compressed archives on startup.
+*   **Save File Editing:** Allows users to open and modify save files in JSON format. Supports loading saves from the game's standard profile folder (`LocalLow\Weappy\Hollywood Animal\Saves\Profiles`) and saving changes while preserving the complete data structure. During loading, progress is displayed in the status bar, indicating the number of processed characters.
+*   **Study Manager:** Provides a tree view of all available and unlocked studies, grouped by departments (TECH, PRODUCTION, LEGAL, HR, PR, SCRIPT, PREPROD, SECURITY, COMFORT, DISTRIBUTION, POST, FINANCE). Each department displays its current progress level. Unlocked studies are highlighted in green, locked ones in red. A dependency system is implemented: attempting to unlock a technology without meeting requirements shows an informational message. Supports mass unlocking of all available studies and locking all unlocked ones, with a notification about the number of changes. Locking a study automatically locks all technologies dependent on it.
+*   **Tags Manager:** Provides a two-panel interface for managing unlocked and locked tags. Locked tags are displayed in the left panel with red highlighting, unlocked tags in the right panel with green highlighting. Supports multi-selection for mass unlocking or locking of tags. Quick operation buttons are implemented: "Open All", "Close All", as well as moving selected items between panels.
+*   **Portrait Editing (Select Portrait):** Allows changing a character's portrait with automatic category determination based on profession (TALENT, AGENT, LIEUT). Supports filtering by gender and age category (YOUNG, MID, OLD). Pagination is implemented for convenient navigation through a large number of images. When the window loads, the character's current portrait is automatically highlighted. This functionality is based on developments from the special version 0.2.3S.B, adapted for the current game version.
+*   **Game Settings Editor:** Allows opening and editing the `GameVariables.json` file, which contains core game settings. Over 250 parameters are available for editing, grouped into thematic categories. Each category is presented as a separate block with a colored border, title, and icon. For each parameter, the corresponding units of measurement (days, $, %, x, months, years, etc.) are indicated. Both single values and ranges with two separate input fields are supported. Automatic search for the configuration file via standard Steam installation paths is implemented, with manual selection as a fallback.
+*   **Spawn Dates Viewer:** Displays a list of all professions in a separate window, indicating the date of the next spawn for a character of that profession. Each entry is presented in a two-column format: the localized profession name and the date in `dd.MM.yyyy` format. Dates are highlighted in green for emphasis.
+*   **Data Validation:** Implements multi-level validation of input data to ensure integrity:
+    *   Numeric fields are checked for allowed characters and value ranges.
+    *   Age is limited to reasonable bounds (0–150 years).
+    *   Mood, attitude, and limit values are constrained to the range 0 to 1.
+    *   Text fields are checked for allowed characters (letters and spaces).
+    *   When pasting from the clipboard, additional validation is performed, converting values if necessary.
+*   **Localization Support:** Reads localization data from JSON files (`CHARACTER_NAMES.json` and `NON_EVENT.json`) to display translated names for professions, studios, skills, traits, and other UI elements. When localization is loaded, displayed character names and filters are automatically updated. Manual loading of localization files is possible via a button with a user icon.
+*   **Resource Management:** Extracts resource files (localization, portrait images) from compressed archives on startup. When the portrait selection window is opened for the first time, the `Profiles.zip` archive is automatically extracted. If necessary archives are missing, informative messages with recommendations are displayed.
+*   **Error Handling and Stability:** Global unhandled exception handling is implemented to prevent unexpected application crashes. All file and JSON operations are wrapped in try-catch blocks with informative error messages. When loading a save, progress is displayed in the status bar, and detailed error information with the cause is shown if errors occur.
+*   **Saving Changes:** When saving changes, full data synchronization with the original JSON object is performed. All modified fields are updated: character attributes, contracts, skills, traits, portraits, as well as global game settings. Upon successful save, the "Save" button turns green for one second, confirming the successful operation.
 
-*   **Редактирование настроек игры (Game Settings Editor):** Позволяет открывать и изменять файл GameVariables.json, содержащий основные игровые настройки. Доступно для редактирования более 250 параметров, сгруппированных по тематическим категориям. Каждая категория представлена в виде отдельного блока с цветной рамкой, заголовком и иконкой. Для каждого параметра указаны соответствующие единицы измерения (дни, $, %, x, мес, лет и т.д.). Поддерживаются как одиночные значения, так и диапазоны с двумя отдельными полями ввода. Реализован автоматический поиск файла конфигурации по стандартным путям установки Steam с возможностью ручного выбора при необходимости.
+## Technology Stack
 
-*   **Просмотр дат спавна (Spawn Dates):** Отображает в отдельном окне список всех профессий с указанием дат следующего появления персонажа соответствующей профессии. Каждая запись представлена в двухколоночном формате: название профессии с локализацией и дата в формате дд.ММ.гггг. Даты выделяются зеленым цветом для акцентирования внимания.
+*   **C#:** Primary programming language.
+*   **WPF:** Windows Presentation Foundation for the user interface.
+*   **Newtonsoft.Json:** Library for JSON serialization and deserialization.
+*   **PropertyChanged.Fody:** Library that automatically implements the `INotifyPropertyChanged` interface.
+*   **System.IO.Compression:** Used for extracting resources from archives.
 
-*   **Проверка данных:** Реализована многоуровневая проверка вводимых данных для обеспечения целостности:
+## Prerequisites
 
-        *   Числовые поля проверяются на допустимые символы и диапазоны значений.
+*   Windows operating system
+*   .NET Framework 4.7.2 or newer (required for WPF) - should be pre-installed on modern versions of Windows.
 
-        *   Возраст ограничен разумными пределами (0–150 лет).
+## Installation Instructions
 
-        *   Значения настроения, отношения и лимита ограничены диапазоном от 0 до 1.
+1.  Download the latest version from the [GitHub repository](https://github.com/Nello2/HollywoodEditor).
+2.  Extract the downloaded archive to a directory of your choice.
+3.  Run the executable file `HollywoodEditor.exe`.
 
-        *   Текстовые поля проверяются на допустимые символы (буквы и пробелы).
+## Usage Guide
 
-        *   При вставке из буфера обмена выполняется дополнительная валидация с преобразованием значений при необходимости.
+1.  **Opening a Save File:**
+    *   Click the "Open File" button.
+    *   Select "OFD" to open a save file. Save files are located in `%localappdata%Low\Weappy\Hollywood Animal\Saves\Profiles`.
 
-*   **Поддержка локализации:** Читает данные локализации из JSON-файлов (CHARACTER_NAMES.json и NON_EVENT.json) для отображения переведённых названий профессий, студий, навыков, черт и других элементов интерфейса. При загрузке локализации автоматически обновляются отображаемые имена персонажей и фильтры. Реализована возможность ручной загрузки файлов локализации через кнопку с иконкой пользователя.
+2.  **Selecting a Locale:**
+    *   Click the "Open File" button and select the directory with the locale JSON.
+    *   Navigate to the Hollywood Animal installation directory, then to `Hollywood Animal_Data\StreamingAssets\Data\Localization\RUS`.
+    *   Select the `RUS` folder containing the localization files.
+    *   Click "Select Folder".
 
-*   **Управление ресурсами:** Извлекает файлы ресурсов (локализация, изображения портретов) из сжатых архивов при запуске. При первом открытии окна выбора портрета выполняется автоматическая распаковка архива Profiles.zip. В случае отсутствия необходимых архивов отображаются информационные сообщения с рекомендациями.
+3.  **Filtering Characters:**
+    *   Use the `Filter_studio` dropdown to filter characters by the studio they belong to.
+    *   Use the `Filter_Prof` dropdown to filter characters by their profession.
+    *   Enter text in the `Filter_txt` text box to search for characters by name.
+    *   Use the `ShowOnlyTalent` checkbox to show only talents (characters).
+    *   Use the `ShowOnlyDead` checkbox to show only dead characters.
+    *   Use the `ShowWithDead` checkbox to include dead characters in the results.
 
-*   **Обработка ошибок и стабильность:** Реализована глобальная обработка необработанных исключений для предотвращения неожиданных вылетов приложения. Все операции с файлами и JSON обернуты в блоки try-catch с выводом информативных сообщений об ошибках. При загрузке сохранения отображается прогресс в статусной строке, а при возникновении ошибок выводится детальная информация с указанием причины.
+4.  **Editing Character Attributes:**
+    *   Select a character from the list.
+    *   Modify attributes in the character details section.
+    *   Text fields use the `Tag` property for input validation:
+        *   `STR`: Allows string input.
+        *   `INT`: Allows integer input.
+        *   `AGE`: Allows integer input up to 150.
+        *   `DBL`: Allows floating-point number input.
+        *   `LMT`: Allows floating-point number input from 0 to 1.
 
-*   **Сохранение изменений:** При сохранении изменений выполняется полная синхронизация данных с исходным JSON-объектом. Обновляются все измененные поля: атрибуты персонажа, контракты, навыки, черты, портреты, а также глобальные настройки игры. При успешном сохранении кнопка "Save" подсвечивается зеленым цветом на секунду, подтверждая успешное выполнение операции.
-  
-## Технологический стек
+5.  **Adding/Removing Skills and Traits:**
+    *   Select a character from the list.
+    *   To add a skill, select it from the dropdown and click the "+" button.
+    *   To remove a skill, click the "X" button next to the skill in the list.
+    *   To add a trait, select it from the dropdown and click the "+" button.
+    *   To remove a trait, click the "X" button next to the trait in the list.
 
-*   **C#:** Основной язык программирования.
-*   **WPF:** Windows Presentation Foundation для пользовательского интерфейса.
-*   **Newtonsoft.Json:** Библиотека для сериализации и десериализации JSON.
-*   **PropertyChanged.Fody:** Библиотека, автоматически реализующая интерфейс `INotifyPropertyChanged`.
-*   **System.IO.Compression:** Используется для извлечения ресурсов из архивов.
+6.  **Saving Changes:**
+    *   Click the "Save" button.
+    *   Choose a location to save the modified save file. It is recommended to create backups of the original save files.
 
-## Предварительные требования
+## Contribution Guidelines
 
-*   Операционная система Windows
-*   .NET Framework 4.7.2 или новее (требуется для WPF) - должна быть предустановлена в современных версиях Windows.
-
-## Инструкция по установке
-
-1.  Скачайте последнюю версию из [репозитория GitHub](https://github.com/Nello2/HollywoodEditor).
-2.  Распакуйте загруженный архив в выбранную вами директорию.
-3.  Запустите исполняемый файл `HollywoodEditor.exe`.
-
-## Руководство по использованию
-
-1.  **Открытие файла сохранения:**
-    *   Нажмите кнопку "Open File".
-    *   Выберите "OFD", чтобы открыть файл сохранения. Файлы сохранений находятся в `%localappdata%Low\Weappy\Hollywood Animal\Saves\Profiles`.
-
-2.  **Выбор локали:**
-    *   Нажмите кнопку "Open File" и выберите директорию с locale json.
-    *   Перейдите в директорию установки Hollywood Animal, затем в `Hollywood Animal_Data\StreamingAssets\Data\Localization\RUS`.
-    *   Выберите папку `RUS`, содержащую файлы локализации.
-    *   Нажмите "Select Folder".
-
-3.  **Фильтрация персонажей:**
-    *   Используйте выпадающий список `Filter_studio` для фильтрации персонажей по студии, к которой они принадлежат.
-    *   Используйте выпадающий список `Filter_Prof` для фильтрации персонажей по их профессии.
-    *   Введите текст в текстовое поле `Filter_txt` для поиска персонажей по имени.
-    *   Используйте флажок `ShowOnlyTalent`, чтобы показывать только таланты (персонажей).
-    *   Используйте флажок `ShowOnlyDead`, чтобы показывать только мёртвых персонажей.
-    *   Используйте флажок `ShowWithDead`, чтобы включать мёртвых персонажей в результаты.
-
-4.  **Редактирование атрибутов персонажа:**
-    *   Выберите персонажа из списка.
-    *   Измените атрибуты в разделе с деталями персонажа.
-    *   Текстовые поля используют свойство Tag для проверки ввода:
-        *   `STR`: Разрешает ввод строк.
-        *   `INT`: Разрешает ввод целых чисел.
-        *   `AGE`: Разрешает ввод целых чисел до 150.
-        *   `DBL`: Разрешает ввод чисел с плавающей точкой.
-        *   `LMT`: Разрешает ввод чисел с плавающей точкой от 0 до 1.
-
-5.  **Добавление/Удаление навыков и черт:**
-    *   Выберите персонажа из списка.
-    *   Чтобы добавить навык, выберите его из выпадающего списка и нажмите кнопку "+".
-    *   Чтобы удалить навык, нажмите кнопку "X" рядом с навыком в списке.
-    *   Чтобы добавить черту, выберите её из выпадающего списка и нажмите кнопку "+".
-    *   Чтобы удалить черту, нажмите кнопку "X" рядом с чертой в списке.
-
-6.  **Сохранение изменений:**
-    *   Нажмите кнопку "Save".
-    *   Выберите место для сохранения изменённого файла сохранения. Рекомендуется создавать резервные копии оригинальных файлов сохранений.
-
-## Рекомендации по внесению вклада
-
-1.  Сделайте форк репозитория.
-2.  Создайте новую ветку для вашей функции или исправления ошибки.
-3.  Реализуйте свои изменения, обеспечивая качество кода и добавляя соответствующие тесты.
-4.  Отправьте pull request с четким описанием ваших изменений.
-
-
-
-
-
+1.  Fork the repository.
+2.  Create a new branch for your feature or bug fix.
+3.  Implement your changes, ensuring code quality and adding appropriate tests.
+4.  Submit a pull request with a clear description of your changes.
