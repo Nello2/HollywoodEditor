@@ -1,0 +1,315 @@
+﻿<Window x:Class="HollywoodEditor.CalcWindow"
+        PreviewMouseWheel="Window_PreviewMouseWheel"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Hollywood Animal Calculator"
+        Height="760" Width="1120"
+        MinHeight="650" MinWidth="980"
+        WindowStartupLocation="CenterOwner"
+        Background="#2b0f0f">
+    <Window.Resources>
+        <SolidColorBrush x:Key="PanelBrush" Color="#451616"/>
+        <SolidColorBrush x:Key="PanelBrush2" Color="#3a1212"/>
+        <SolidColorBrush x:Key="HeaderBrush" Color="#b93838"/>
+        <SolidColorBrush x:Key="BorderBrushRed" Color="#c74242"/>
+        <SolidColorBrush x:Key="TextBrush" Color="#ffffff"/>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#4a4a4a"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#777"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="3"/>
+            <Setter Property="MinHeight" Value="28"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="#3f3f3f"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#999"/>
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="Margin" Value="3"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="#3f3f3f"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="BorderBrush" Value="#999"/>
+            <Setter Property="Padding" Value="3"/>
+            <Setter Property="Margin" Value="3"/>
+            <Setter Property="MinHeight" Value="28"/>
+            <Setter Property="MaxDropDownHeight" Value="360"/>
+            <EventSetter Event="PreviewMouseWheel" Handler="ScrollableControl_PreviewMouseWheel"/>
+        </Style>
+        <Style TargetType="ComboBoxItem">
+            <EventSetter Event="PreviewMouseWheel" Handler="ScrollableControl_PreviewMouseWheel"/>
+        </Style>
+        <Style TargetType="ListBox">
+            <Setter Property="Background" Value="#351111"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#a83a3a"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
+            <EventSetter Event="PreviewMouseWheel" Handler="ScrollableControl_PreviewMouseWheel"/>
+        </Style>
+        <Style TargetType="TabControl">
+            <Setter Property="Background" Value="#2b0f0f"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style TargetType="TabItem">
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Padding" Value="10,5"/>
+        </Style>
+        <Style x:Key="SectionBorder" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource PanelBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrushRed}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="6"/>
+        </Style>
+        <Style x:Key="HeaderText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+    </Window.Resources>
+
+    <DockPanel Margin="8">
+        <Border DockPanel.Dock="Top" Background="{StaticResource HeaderBrush}" Padding="8" CornerRadius="4" Margin="0,0,0,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock x:Name="TitleText" Text="🎬 Hollywood Animal Calculator" Foreground="White" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
+                    <TextBlock Text="by CallOn84" Foreground="#ffd0d0" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,3,0,0" Opacity="0.9"/>
+                </StackPanel>
+                <TextBlock x:Name="DataStatusText" Grid.Column="1" Foreground="#ffd0d0" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <ComboBox x:Name="LanguageBox" Grid.Column="2" Width="130" SelectionChanged="LanguageBox_SelectionChanged">
+                    <ComboBoxItem Content="English" Tag="ENG" IsSelected="True"/>
+                    <ComboBoxItem Content="Русский" Tag="RUS"/>
+                </ComboBox>
+            </Grid>
+        </Border>
+
+        <TabControl x:Name="Tabs">
+            <TabItem x:Name="GeneratorTab" Header="Script Generator">
+                <ScrollViewer x:Name="GeneratorScroll" VerticalScrollBarVisibility="Auto" PreviewMouseWheel="ScrollableControl_PreviewMouseWheel">
+                    <StackPanel Margin="4">
+                        <Border Style="{StaticResource SectionBorder}">
+                            <StackPanel>
+                                <TextBlock x:Name="GeneratorSettingsHeader" Style="{StaticResource HeaderText}" Text="Generator Settings"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                        <TextBlock x:Name="TargetCompatibilityText" Text="Target compatibility" Foreground="White" Margin="3,0,0,3"/>
+                                        <TextBox x:Name="GenTargetCompatibilityBox" Text="4.0" Width="110" Height="28" HorizontalAlignment="Left" VerticalContentAlignment="Center" LostFocus="GenTargetCompatibilityBox_LostFocus"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                        <TextBlock x:Name="TargetScoreText" Text="Target movie score" Foreground="White" Margin="3,0,0,3"/>
+                                        <TextBox x:Name="GenTargetScoreBox" Text="6" Width="110" Height="28" HorizontalAlignment="Left" VerticalContentAlignment="Center" LostFocus="GenTargetScoreBox_LostFocus"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="2" Margin="0,0,10,0">
+                                        <TextBlock x:Name="TargetQualityText" Text="Script Qual" Foreground="White" Margin="3,0,0,3"/>
+                                        <TextBox x:Name="GenTargetQualityBox" Text="6" Width="90" Height="28" HorizontalAlignment="Left" VerticalContentAlignment="Center" LostFocus="GenTargetQualityBox_LostFocus"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="3" Margin="0,0,10,0">
+                                        <TextBlock x:Name="TargetTagCountText" Text="Tags count" Foreground="White" Margin="3,0,0,3"/>
+                                        <TextBox x:Name="GenTargetTagCountBox" Text="7" Width="90" Height="28" HorizontalAlignment="Left" VerticalContentAlignment="Center" LostFocus="GenTargetTagCountBox_LostFocus"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                                        <Button x:Name="StartingProfileButton" Content="Starting Tags" Width="120" Height="34" Click="StartingProfileButton_Click"/>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Style="{StaticResource SectionBorder}">
+                                <StackPanel>
+                                    <TextBlock x:Name="LockedHeader" Style="{StaticResource HeaderText}" Text="Locked Elements"/>
+                                    <TextBlock x:Name="LockedHintText" Text="Select specific tags you MUST have in the script." Foreground="#ffd0d0" TextWrapping="Wrap" FontSize="12" Height="34" Margin="0,-4,0,8"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="160"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <ComboBox x:Name="GenCategoryBox" SelectionChanged="CategoryBox_SelectionChanged"/>
+                                        <ComboBox x:Name="GenTagBox" Grid.Column="1" IsTextSearchEnabled="True"/>
+                                        <Button x:Name="AddLockedButton" Grid.Column="2" Content="Add" Click="AddLockedButton_Click"/>
+                                    </Grid>
+                                    <ListBox x:Name="LockedList" MinHeight="145" DisplayMemberPath="Display"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button x:Name="RemoveLockedButton" Content="Remove selected" HorizontalAlignment="Left" Click="RemoveLockedButton_Click"/>
+                                        <Button x:Name="ClearLockedButton" Content="Clear" HorizontalAlignment="Left" Click="ClearLockedButton_Click"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                            <Border Grid.Column="1" Style="{StaticResource SectionBorder}">
+                                <StackPanel>
+                                    <TextBlock x:Name="ExcludedHeader" Style="{StaticResource HeaderText}" Text="Excluded Elements"/>
+                                    <TextBlock x:Name="ExcludedHintText" Text="Select tags to BAN (e.g., due to &quot;The Code&quot;). The generator will never pick these." Foreground="#ffd0d0" TextWrapping="Wrap" FontSize="12" Height="34" Margin="0,-4,0,8"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="160"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <ComboBox x:Name="ExCategoryBox" SelectionChanged="CategoryBox_SelectionChanged"/>
+                                        <ComboBox x:Name="ExTagBox" Grid.Column="1" IsTextSearchEnabled="True"/>
+                                        <Button x:Name="AddExcludedButton" Grid.Column="2" Content="Add" Click="AddExcludedButton_Click"/>
+                                    </Grid>
+                                    <ListBox x:Name="ExcludedList" MinHeight="145" DisplayMemberPath="Display"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button x:Name="RemoveExcludedButton" Content="Remove selected" HorizontalAlignment="Left" Click="RemoveExcludedButton_Click"/>
+                                        <Button x:Name="ClearExcludedButton" Content="Clear" HorizontalAlignment="Left" Click="ClearExcludedButton_Click"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                        <Border Style="{StaticResource SectionBorder}">
+                            <StackPanel>
+                                <Button x:Name="GenerateButton" Content="Generate Scripts" Height="36" Click="GenerateButton_Click"/>
+                                <ListBox x:Name="GeneratedScriptsList" MinHeight="240" Margin="3"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button x:Name="PinScriptButton" Content="Pin selected" Click="PinScriptButton_Click"/>
+                                    <Button x:Name="SavePinnedButton" Content="Save pinned" Click="SavePinnedButton_Click"/>
+                                    <Button x:Name="LoadPinnedButton" Content="Load pinned" Click="LoadPinnedButton_Click"/>
+                                </StackPanel>
+                                <TextBlock x:Name="PinnedHeader" Style="{StaticResource HeaderText}" Text="Pinned Scripts" Margin="0,10,0,4"/>
+                                <ListBox x:Name="PinnedScriptsList" MinHeight="110"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem x:Name="CompatibilityTab" Header="SE Compatibility">
+                <ScrollViewer x:Name="CompatibilityScroll" VerticalScrollBarVisibility="Auto" PreviewMouseWheel="ScrollableControl_PreviewMouseWheel">
+                    <StackPanel Margin="4">
+                        <Border Style="{StaticResource SectionBorder}">
+                            <StackPanel>
+                                <TextBlock x:Name="CheckCompatibilityHeader" Style="{StaticResource HeaderText}" Text="Check Compatibility"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="160"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ComboBox x:Name="SynCategoryBox" SelectionChanged="CategoryBox_SelectionChanged"/>
+                                    <ComboBox x:Name="SynTagBox" Grid.Column="1" IsTextSearchEnabled="True"/>
+                                    <Button x:Name="AddSynergyButton" Grid.Column="2" Content="Add" Click="AddSynergyButton_Click"/>
+                                </Grid>
+                                <ListBox x:Name="SynergyList" MinHeight="150" DisplayMemberPath="Display"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button x:Name="RemoveSynergyButton" Content="Remove selected" Click="RemoveSynergyButton_Click"/>
+                                    <Button x:Name="ClearSynergyButton" Content="Clear" Click="ClearSynergyButton_Click"/>
+                                    <Button x:Name="CheckCompatibilityButton" Content="Check Compatibility" Click="CheckCompatibilityButton_Click"/>
+                                    <Button x:Name="TransferToAdvertisersButton" Content="Find Best Advertisers →" Click="TransferToAdvertisersButton_Click"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource SectionBorder}">
+                            <StackPanel>
+                                <TextBlock x:Name="SynergyResultsHeader" Style="{StaticResource HeaderText}" Text="Results"/>
+                                <TextBlock x:Name="SynergySummaryText" Foreground="White" FontSize="15" TextWrapping="Wrap"/>
+                                <TextBlock x:Name="SynergyConflictsText" Foreground="#ff9999" Margin="0,8,0,0" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem x:Name="AdvertisersTab" Header="Best Advertisers">
+                <ScrollViewer x:Name="AdvertisersScroll" VerticalScrollBarVisibility="Auto" PreviewMouseWheel="ScrollableControl_PreviewMouseWheel">
+                    <StackPanel Margin="4">
+                        <Border Style="{StaticResource SectionBorder}">
+                            <StackPanel>
+                                <TextBlock x:Name="AdvertisersHeader" Style="{StaticResource HeaderText}" Text="Best Advertisers"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="160"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ComboBox x:Name="AdvCategoryBox" SelectionChanged="CategoryBox_SelectionChanged"/>
+                                    <ComboBox x:Name="AdvTagBox" Grid.Column="1" IsTextSearchEnabled="True"/>
+                                    <Button x:Name="AddAdvertiserTagButton" Grid.Column="2" Content="Add" Click="AddAdvertiserTagButton_Click"/>
+                                </Grid>
+                                <ListBox x:Name="AdvertiserTagsList" MinHeight="120" DisplayMemberPath="Display"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="80"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="80"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock x:Name="CommercialScoreText" Text="Commercial" Foreground="White" VerticalAlignment="Center"/>
+                                    <TextBox x:Name="CommercialScoreBox" Grid.Column="1" Text="6"/>
+                                    <TextBlock x:Name="ArtScoreText" Grid.Column="2" Text="Artistic" Foreground="White" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                                    <TextBox x:Name="ArtScoreBox" Grid.Column="3" Text="6"/>
+                                    <Button x:Name="AnalyzeAdvertisersButton" Grid.Column="4" Content="Analyze" Click="AnalyzeAdvertisersButton_Click"/>
+                                </Grid>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button x:Name="RemoveAdvertiserTagButton" Content="Remove selected" Click="RemoveAdvertiserTagButton_Click"/>
+                                    <Button x:Name="ClearAdvertisersButton" Content="Clear" Click="ClearAdvertisersButton_Click"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource SectionBorder}">
+                            <StackPanel>
+                                <TextBlock x:Name="AudienceHeader" Style="{StaticResource HeaderText}" Text="Audience and Advertisers"/>
+                                <TextBlock x:Name="AudienceSummaryText" Foreground="White" TextWrapping="Wrap"/>
+                                <ListBox x:Name="AdvertisersResultList" MinHeight="210" Margin="3"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem x:Name="DistributionTab" Header="Distribution">
+                <ScrollViewer x:Name="DistributionScroll" VerticalScrollBarVisibility="Auto" PreviewMouseWheel="ScrollableControl_PreviewMouseWheel">
+                    <StackPanel Margin="8">
+                        <Border Style="{StaticResource SectionBorder}">
+                            <StackPanel>
+                                <TextBlock x:Name="DistributionHeader" Style="{StaticResource HeaderText}" Text="Distribution Calculator"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="120"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="140"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock x:Name="DistributionCommercialText" Text="Commercial score" Foreground="White" VerticalAlignment="Center"/>
+                                    <TextBox x:Name="DistributionCommercialBox" Grid.Column="1" Text="6"/>
+                                    <TextBlock x:Name="AvailableScreeningsText" Grid.Column="2" Text="Available screenings" Foreground="White" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                                    <TextBox x:Name="AvailableScreeningsBox" Grid.Column="3" Text="3200"/>
+                                    <Button x:Name="CalculateDistributionButton" Grid.Column="4" Content="Calculate" Click="CalculateDistributionButton_Click"/>
+                                </Grid>
+                                <UniformGrid x:Name="DistributionGrid" Columns="4" Margin="0,12,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Window>
