@@ -1,55 +1,92 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:system="clr-namespace:System;assembly=mscorlib">
-    <system:String x:Key="OpenNamesTooltip">Open CHARACTER_NAMES file for better usability</system:String>
-    <system:String x:Key="OpenSaveTooltip">Open save.json file</system:String>
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
-    <system:String x:Key="Budget">Budget</system:String>
-    <system:String x:Key="Cash">Cash</system:String>
-    <system:String x:Key="Reputation">Reputation</system:String>
-    <system:String x:Key="Influence">Influence</system:String>
-    <system:String x:Key="ActiveStudioPolitics">Active studio politics</system:String>
+    <sys:String x:Key="AppTitle">Hollywood Editor</sys:String>
 
-    <system:String x:Key="ShowOnlyDead">Show only Dead</system:String>
-    <system:String x:Key="ShowWithDead">Show With Dead</system:String>
-    <system:String x:Key="ShowOnlyTalent">Show only Talent</system:String>
+    <!-- Главное окно -->
+    
+    <sys:String x:Key="Budget">Budget</sys:String>
+    <sys:String x:Key="Cash">Cash</sys:String>
+    <sys:String x:Key="Reputation">Reputation</sys:String>
+    <sys:String x:Key="Influence">Influence</sys:String>
+    <sys:String x:Key="ActiveStudioPolitics">Active studio politics</sys:String>
+    <sys:String x:Key="ShowSpawns">Spawn Dates</sys:String>
+    <sys:String x:Key="ShowTechs">Study Manager</sys:String>
+    <sys:String x:Key="ShowTags">Manage Tags</sys:String>
+    <sys:String x:Key="ShowOnlyDead">Show only Dead</sys:String>
+    <sys:String x:Key="ShowWithDead">Show With Dead</sys:String>
+    <sys:String x:Key="ShowOnlyTalent">Show only Talent</sys:String>
+    <sys:String x:Key="SetMoodAndAtt">Set Mood and Att to 1.0</sys:String>
+    <sys:String x:Key="SetContractDaysToMax">Set Contract days to max</sys:String>
+    <sys:String x:Key="SetSkillToLimit">Set Skill to Limit</sys:String>
+    <sys:String x:Key="RaiseLimitToMax">Raise Limit to 1.0</sys:String>
+    <sys:String x:Key="SetAgeTo18">Set Age to 18</sys:String>
+    <sys:String x:Key="GetAllSkillsMax">Get all skills (max)</sys:String>
 
-    <system:String x:Key="Name">Name</system:String>
-    <system:String x:Key="StudioId">Studio Id</system:String>
-    <system:String x:Key="Mood">Mood</system:String>
-    <system:String x:Key="Attitude">Attitude</system:String>
-    <system:String x:Key="Prof">Prof.</system:String>
-    <system:String x:Key="Age">Age</system:String>
-    <system:String x:Key="Birth">Birth</system:String>
-    <system:String x:Key="Skill">Skill</system:String>
-    <system:String x:Key="Limit">Limit</system:String>
-    <system:String x:Key="IsDead">Is Dead</system:String>
+    <!-- Панель символов -->
+    
+    <sys:String x:Key="Name">Name</sys:String>
+    <sys:String x:Key="StudioId">Studio Id</sys:String>
+    <sys:String x:Key="Mood">Mood</sys:String>
+    <sys:String x:Key="Attitude">Attitude</sys:String>
+    <sys:String x:Key="Prof">Prof.</sys:String>
+    <sys:String x:Key="Age">Age</sys:String>
+    <sys:String x:Key="Birth">Birth</sys:String>
+    <sys:String x:Key="Skill">Skill</sys:String>
+    <sys:String x:Key="Limit">Limit</sys:String>
+    <sys:String x:Key="IsDead">Is Dead</sys:String>
 
-    <system:String x:Key="Contract">Contract</system:String>
-    <system:String x:Key="DaysLeft">Days Left</system:String>
-    <system:String x:Key="DateSign">Date sign</system:String>
-    <system:String x:Key="DateEnd">Date end</system:String>
-    <system:String x:Key="Years">Years</system:String>
-    <system:String x:Key="InitFee">Init fee</system:String>
-    <system:String x:Key="MonthSalary">M/s</system:String>
-    <system:String x:Key="WeightSalary">W/s</system:String>
+    <!-- Панель контракта -->
+    
+    <sys:String x:Key="Contract">Contract</sys:String>
+    <sys:String x:Key="DaysLeft">Days Left</sys:String>
+    <sys:String x:Key="DateSign">Date sign</sys:String>
+    <sys:String x:Key="DateEnd">Date end</sys:String>
+    <sys:String x:Key="Years">Years</sys:String>
+    <sys:String x:Key="InitFee">Init fee</sys:String>
+    <sys:String x:Key="MonthSalary">M/s</sys:String>
+    <sys:String x:Key="WeightSalary">W/s</sys:String>
 
-    <system:String x:Key="Traits">Traits</system:String>
-    <system:String x:Key="Skills">Skills</system:String>
-    <system:String x:Key="KnownSins">Known Sins</system:String>
+    <!-- Черты и Скиллы -->
+    
+    <sys:String x:Key="Traits">Traits</sys:String>
+    <sys:String x:Key="Skills">Skills</sys:String>
+    <sys:String x:Key="KnownSins">Known Sins</sys:String>
 
-    <system:String x:Key="SetMoodAndAtt">Set Mood and Att to 1.0</system:String>
-    <system:String x:Key="SetContractDays">Set Contract days to max</system:String>
-    <system:String x:Key="SetSkillToLimit">Set Skill to Limit</system:String>
-    <system:String x:Key="RaiseLimit">Raise Limit to 1.0</system:String>
-    <system:String x:Key="SetAgeTo18">Set Age to 18</system:String>
-    <system:String x:Key="GetAllSkills">Get all skills (max)</system:String>
+    <!-- Всплывающие подсказки -->
+    
+    <sys:String x:Key="OpenNamesTooltip">Open CHARACTER_NAMES file for better usability</sys:String>
+    <sys:String x:Key="OpenSaveTooltip">Open save.json file</sys:String>
+    <sys:String x:Key="SwitchToEnglish">Switch to English</sys:String>
+    <sys:String x:Key="SwitchToRussian">Переключиться на русский</sys:String>
+    <sys:String x:Key="LocaleChanged">Locale changed successfully!</sys:String>
 
-    <system:String x:Key="ShowSpawns">Show Spawns</system:String>
-    <system:String x:Key="ShowTechs">Show closed Techs</system:String>
-    <system:String x:Key="ShowTags">Show closed Tags</system:String>
+    <!-- Выбор портрета -->
+    
+    <sys:String x:Key="SelectPortraitTitle">Select Portrait</sys:String>
+    <sys:String x:Key="Previous">◀ Previous</sys:String>
+    <sys:String x:Key="Next">Next ▶</sys:String>
+    <sys:String x:Key="Apply">Apply</sys:String>
+    <sys:String x:Key="Cancel">Cancel</sys:String>
 
-    <system:String x:Key="Save">Save</system:String>
-    <system:String x:Key="Close">Close</system:String>
-    <system:String x:Key="Exit">Exit</system:String>
+    <!-- Окно субмодулей -->
+
+    <sys:String x:Key="GameSettingsEditorWindowTitle">Game Settings Editor</sys:String>
+    <sys:String x:Key="GameSettingsTitle">⚙️ Game Settings</sys:String>
+    <sys:String x:Key="Save">Save</sys:String>
+
+    <!-- Дополнительные всплывающие подсказки -->
+    
+    <sys:String x:Key="StudioBusyTooltipLine1">If the choice is not available,</sys:String>
+    <sys:String x:Key="StudioBusyTooltipLine2">then the character cannot be selected.</sys:String>
+    <sys:String x:Key="TraitsOrderTooltip">Order affects in-game display — only first two traits are shown</sys:String>
+    <sys:String x:Key="SkillsEditTooltip">Experience cannot be removed — only skill values can be modified. Golden badge at 12+. COM/ART range 0.0–1.0 with 0.25 increments</sys:String>
+    <sys:String x:Key="MinLabel">Min.</sys:String>
+    <sys:String x:Key="CalculatorTooltip">Calculator</sys:String>
+    <sys:String x:Key="ChangePortraitTooltip">Change portrait</sys:String>
+    <sys:String x:Key="PerksTooltip">Perks editor</sys:String>
+    <sys:String x:Key="SettingsTooltip">Settings</sys:String>
+    <sys:String x:Key="SelectSaveFileTitle">Select save file</sys:String>
+    <sys:String x:Key="SelectWhereToSaveTitle">Select where to save</sys:String>
 </ResourceDictionary>

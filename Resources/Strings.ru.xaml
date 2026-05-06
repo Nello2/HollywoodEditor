@@ -1,56 +1,92 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <sys:String x:Key="AppTitle">Редактор сохранений</sys:String>
+
+    <!-- Главное окно -->
     
-    <system:String x:Key="OpenNamesTooltip">Open CHARACTER_NAMES file for better usability</system:String>
-    <system:String x:Key="OpenSaveTooltip">Open save.json file</system:String>
+    <sys:String x:Key="Budget">Банк</sys:String>
+    <sys:String x:Key="Cash">Деньги</sys:String>
+    <sys:String x:Key="Reputation">Репутация</sys:String>
+    <sys:String x:Key="Influence">Влияние</sys:String>
+    <sys:String x:Key="ActiveStudioPolitics">Политика студии</sys:String>
+    <sys:String x:Key="ShowSpawns">Появления</sys:String>
+    <sys:String x:Key="ShowTechs">Исследования</sys:String>
+    <sys:String x:Key="ShowTags">Панель тегов</sys:String>
+    <sys:String x:Key="ShowOnlyDead">Только трупы</sys:String>
+    <sys:String x:Key="ShowWithDead">С трупами</sys:String>
+    <sys:String x:Key="ShowOnlyTalent">Только таланты</sys:String>
+    <sys:String x:Key="SetMoodAndAtt">Установить настрой и отнош. в 1.0</sys:String>
+    <sys:String x:Key="SetContractDaysToMax">Макс. дней контракта</sys:String>
+    <sys:String x:Key="SetSkillToLimit">Установить навык в лимит</sys:String>
+    <sys:String x:Key="RaiseLimitToMax">Поднять лимит до 1.0</sys:String>
+    <sys:String x:Key="SetAgeTo18">Установить возраст 18</sys:String>
+    <sys:String x:Key="GetAllSkillsMax">Получить все навыки (макс)</sys:String>
 
-    <system:String x:Key="Budget">Бюджет</system:String>
-    <system:String x:Key="Cash">Наличные</system:String>
-    <system:String x:Key="Reputation">Репутация</system:String>
-    <system:String x:Key="Influence">Влияние</system:String>
-    <system:String x:Key="ActiveStudioPolitics">Активная политика студии</system:String>
+    <!-- Панель символов -->
+    
+    <sys:String x:Key="Name">Имя</sys:String>
+    <sys:String x:Key="StudioId">Студия</sys:String>
+    <sys:String x:Key="Mood">Настрой</sys:String>
+    <sys:String x:Key="Attitude">Мнение</sys:String>
+    <sys:String x:Key="Prof">Проф.</sys:String>
+    <sys:String x:Key="Age">Возраст</sys:String>
+    <sys:String x:Key="Birth">Д/р</sys:String>
+    <sys:String x:Key="Skill">Навык</sys:String>
+    <sys:String x:Key="Limit">Лимит</sys:String>
+    <sys:String x:Key="IsDead">Мертв(а)</sys:String>
 
-    <system:String x:Key="ShowOnlyDead">Показать только мертвых</system:String>
-    <system:String x:Key="ShowWithDead">Показать с мертвыми</system:String>
-    <system:String x:Key="ShowOnlyTalent">Показать только таланты</system:String>
+    <!-- Панель контракта -->
+    
+    <sys:String x:Key="Contract">Контракт</sys:String>
+    <sys:String x:Key="DaysLeft">Осталось</sys:String>
+    <sys:String x:Key="DateSign">Начало</sys:String>
+    <sys:String x:Key="DateEnd">Исход</sys:String>
+    <sys:String x:Key="Years">Лет</sys:String>
+    <sys:String x:Key="InitFee">Взнос</sys:String>
+    <sys:String x:Key="MonthSalary">Мес/окл</sys:String>
+    <sys:String x:Key="WeightSalary">Вес/окл</sys:String>
 
-    <system:String x:Key="Name">Имя</system:String>
-    <system:String x:Key="StudioId">ID студии</system:String>
-    <system:String x:Key="Mood">Настроение</system:String>
-    <system:String x:Key="Attitude">Отношение</system:String>
-    <system:String x:Key="Prof">Проф.</system:String>
-    <system:String x:Key="Age">Возраст</system:String>
-    <system:String x:Key="Birth">Рождение</system:String>
-    <system:String x:Key="Skill">Навык</system:String>
-    <system:String x:Key="Limit">Лимит</system:String>
-    <system:String x:Key="IsDead">Мертв</system:String>
+    <!-- Черты и Скиллы -->
+    
+    <sys:String x:Key="Traits">Черты</sys:String>
+    <sys:String x:Key="Skills">Опыт</sys:String>
+    <sys:String x:Key="KnownSins">Известные грехи</sys:String>
 
-    <system:String x:Key="Contract">Контракт</system:String>
-    <system:String x:Key="DaysLeft">Дней осталось</system:String>
-    <system:String x:Key="DateSign">Дата подп.</system:String>
-    <system:String x:Key="DateEnd">Дата оконч.</system:String>
-    <system:String x:Key="Years">Лет</system:String>
-    <system:String x:Key="InitFee">Нач. взнос</system:String>
-    <system:String x:Key="MonthSalary">З/п в мес</system:String>
-    <system:String x:Key="WeightSalary">Вес з/п</system:String>
+    <!-- Всплывающие подсказки -->
 
-    <system:String x:Key="Traits">Черты</system:String>
-    <system:String x:Key="Skills">Навыки</system:String>
-    <system:String x:Key="KnownSins">Известные грехи</system:String>
+    <sys:String x:Key="OpenNamesTooltip">Открыть файл CHARACTER_NAMES для лучшей читаемости</sys:String>
+    <sys:String x:Key="OpenSaveTooltip">Открыть файл сохранения save.json</sys:String>
+    <sys:String x:Key="SwitchToEnglish">Switch to English</sys:String>
+    <sys:String x:Key="SwitchToRussian">Переключиться на русский</sys:String>
+    <sys:String x:Key="LocaleChanged">Язык успешно изменён!</sys:String>
 
-    <system:String x:Key="SetMoodAndAtt">Уст. настр. и отнош. на 1.0</system:String>
-    <system:String x:Key="SetContractDays">Макс. дней контракта</system:String>
-    <system:String x:Key="SetSkillToLimit">Навык к лимиту</system:String>
-    <system:String x:Key="RaiseLimit">Лимит до 1.0</system:String>
-    <system:String x:Key="SetAgeTo18">Возраст до 18</system:String>
-    <system:String x:Key="GetAllSkills">Все навыки (макс)</system:String>
+    <!-- Выбор портрета -->
 
-    <system:String x:Key="ShowSpawns">Даты появления</system:String>
-    <system:String x:Key="ShowTechs">Закрытые технологии</system:String>
-    <system:String x:Key="ShowTags">Закрытые теги</system:String>
+    <sys:String x:Key="SelectPortraitTitle">Выбор портрета</sys:String>
+    <sys:String x:Key="Previous">◀ Назад</sys:String>
+    <sys:String x:Key="Next">Вперёд ▶</sys:String>
+    <sys:String x:Key="Apply">Применить</sys:String>
+    <sys:String x:Key="Cancel">Отмена</sys:String>
 
-    <system:String x:Key="Save">Сохранить</system:String>
-    <system:String x:Key="Close">Закрыть</system:String>
-    <system:String x:Key="Exit">Выход</system:String>
+    <!-- Окно субмодулей -->
+    
+    <sys:String x:Key="GameSettingsEditorWindowTitle">Редактор настроек игры</sys:String>
+    <sys:String x:Key="GameSettingsTitle">⚙️ Настройки игры</sys:String>
+    <sys:String x:Key="Save">Сохранить</sys:String>
+
+    <!-- Дополнительные всплывающие подсказки -->
+    
+    <sys:String x:Key="StudioBusyTooltipLine1">Если выбор недоступен,</sys:String>
+    <sys:String x:Key="StudioBusyTooltipLine2">значит персонажа нельзя выбрать.</sys:String>
+    <sys:String x:Key="TraitsOrderTooltip">Порядок влияет на отображение в игре — показываются только первые две черты</sys:String>
+    <sys:String x:Key="SkillsEditTooltip">Опыт нельзя удалить — можно менять только значения навыков. Золотой значок с 12+. Диапазон КОМ/АРТ 0.0–1.0 с шагом 0.25</sys:String>
+    <sys:String x:Key="MinLabel">Мин.</sys:String>
+    <sys:String x:Key="CalculatorTooltip">Калькулятор</sys:String>
+    <sys:String x:Key="ChangePortraitTooltip">Сменить портрет</sys:String>
+    <sys:String x:Key="PerksTooltip">Редактор исследований</sys:String>
+    <sys:String x:Key="SettingsTooltip">Настройки</sys:String>
+    <sys:String x:Key="SelectSaveFileTitle">Выберите файл сохранения</sys:String>
+    <sys:String x:Key="SelectWhereToSaveTitle">Выберите место сохранения</sys:String>
 </ResourceDictionary>
