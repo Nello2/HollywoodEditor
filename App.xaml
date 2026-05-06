@@ -1,13 +1,12 @@
-﻿<Application x:Class="HollywoodEditor.App"
+<Application x:Class="HollywoodEditor.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:HollywoodEditor"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <FontFamily x:Key="Jura">pack://application:,,,/Resources/Jura-SemiBold.ttf#Jura SemiBold</FontFamily>
-        <!--<Style TargetType="{x:Type Window}">
-            <Setter Property="FontFamily" Value="{StaticResource Jura}"/>
-        </Style>-->
+        <ResourceDictionary>
+            <FontFamily x:Key="Jura">pack://application:,,,/Resources/Jura-SemiBold.ttf#Jura SemiBold</FontFamily>
+        </ResourceDictionary>
     </Application.Resources>
-</Application>
 
+</Application>
