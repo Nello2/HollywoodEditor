@@ -1,9 +1,5 @@
-﻿using System;
+﻿using PropertyChanged;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PropertyChanged;
 
 namespace HollywoodEditor.Models
 {
@@ -29,7 +25,6 @@ namespace HollywoodEditor.Models
                    b.finished == a.finished &&
                    b.locked == a.locked &&
                    b.progress == a.progress;
-            //b.chains == a.chains;
         }
 
         public static bool operator !=(Milestones a, Milestones b)

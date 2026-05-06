@@ -1,59 +1,43 @@
 ﻿using Newtonsoft.Json;
+using PropertyChanged;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PropertyChanged;
 
 namespace HollywoodEditor.Models
 {
     [AddINotifyPropertyChangedInterface]
-    // Улучшена совместимость под 0.8.68EA
     public class Contract
     {
         private int daysLeft;
-        private int amount1;
-        private bool lockamount = false;
+        private int amountValue;
+
         [JsonIgnore]
         public bool IsInit { get; set; }
+
         public int contractType { get; set; }
+
         public int amount
         {
-            get => amount1;
+            get => amountValue;
             set
             {
-                amount1 = value;
+                amountValue = value;
                 startAmount = value;
-                //имеет приоритет перед кол-во дней!
-                if (!IsInit)
-                {
-                    if (!lockamount)
-                    {
-                        //менять кол-во дней
-                        IsInit = true;
-                        DaysLeft = (int)Math.Ceiling((dateOfEnding - dateOfNow).TotalDays);
-                        if (DaysLeft < 1)
-                        {
-                            dateOfSigning = dateOfSigning.AddDays(Math.Abs(DaysLeft) + 1);//+ сколько то чтоб получился 1 день?
-                            DaysLeft = 1;
-                            //+1 на случай нуля
-                        }
-                        IsInit = false;
-                    }
-                }
             }
         }
-        // Улучшена совместимость!
+
         public int startAmount { get; set; }
         public double initialFee { get; set; }
         public double monthlySalary { get; set; }
         public double weightToSalary { get; set; }
         public DateTime dateOfSigning { get; set; }
+
         [JsonIgnore]
         public DateTime dateOfEnding => dateOfSigning.AddYears(amount);
+
         [JsonIgnore]
         public DateTime dateOfNow { get; set; }
+
         #region ImNotUse
         public bool is5050 { get; set; }
         public bool payed5050 { get; set; }
@@ -68,72 +52,15 @@ namespace HollywoodEditor.Models
         public double FeeWith5050 { get; set; }
         public int SecondPay { get; set; }
         #endregion
+
         [JsonIgnore]
         public int DaysLeft
         {
             get => daysLeft;
-            set
-            {
-                if (!IsInit)
-                {
-
-                    var daysbeforenow = (dateOfNow - dateOfSigning).TotalDays; //1089
-                    var daysafternow = (dateOfEnding - dateOfNow).TotalDays; //6
-                    var differernce = value - DaysLeft; //val = 2560 left = 6 dif = 2554
-                    if (differernce > 0) //увеличиваем кол-во дней
-                    {
-                        if (differernce > daysbeforenow) //не осталось для смещения вперед
-                        {
-                            //докинули год лет
-                            lockamount = true;
-                            amount += (int)Math.Ceiling((differernce - daysbeforenow) / 365.2425); //3->8
-                            lockamount = false;
-                            //сколько всего должно получится дней
-                            //var im_need = differernce + daysbeforenow; // 3643
-                            //пересчитали новую концову
-                            daysafternow = (dateOfSigning.AddYears(amount) - dateOfNow).TotalDays; //1883
-                            //определили сколько должно быть до начала контракта
-
-
-                            var to_move = daysafternow - value; //-1810
-                            //var daystoremovefromstart = to_move - daysbeforenow; //-2899
-                            dateOfSigning = dateOfSigning.AddDays(-1 * to_move);
-                        }
-                        else
-                        {
-                            dateOfSigning = dateOfSigning.AddDays(differernce);
-                        }
-                    }
-                    else //Уменьшаем кол-во дней //-340
-                    {
-                        if ((daysafternow - differernce) > 0) //10
-                        {
-                            var to_move = differernce;
-                            dateOfSigning = dateOfSigning.AddDays(differernce);
-                        }
-                        else // когда вылетели
-                        {
-                            value = 1;
-                            dateOfSigning = dateOfSigning.AddDays(-1 * (daysafternow - 1));
-                        }
-                    }
-                    if (dateOfEnding <= dateOfNow)
-                    {
-                        var tt = dateOfNow - dateOfEnding;
-                        dateOfSigning = dateOfSigning.AddDays(tt.TotalDays + 1);
-                    }
-                    if (dateOfSigning >= dateOfNow)
-                    {
-                        var tt = dateOfSigning - dateOfNow;
-                        dateOfSigning = dateOfSigning.AddDays((-1 * tt.TotalDays) - 1);
-                    }
-                }
-
-
-                daysLeft = value;
-            }
+            set => daysLeft = value;
         }
-        public void SetCalcDaysLeft()//DateTime now)
+
+        public void SetCalcDaysLeft()
         {
             var t = dateOfEnding;
             TimeSpan ts = t - dateOfNow;
@@ -187,11 +114,13 @@ namespace HollywoodEditor.Models
         public Contract()
         {
             IsInit = true;
+            offers = new List<object>();
+            monthlySalary = 0;
+            weightToSalary = 100;
         }
 
-        public Contract(DateTime now)
+        public Contract(DateTime now) : this()
         {
-            IsInit = true;
             amount = 3;
             startAmount = 3;
             monthlySalary = 0;
@@ -209,7 +138,6 @@ namespace HollywoodEditor.Models
             raiseBonus = 0;
             ultimatumCool = 0;
             leaveCool = 0;
-            offers = new List<object>();
             extension = null;
             Is5050 = false;
             FeeWith5050 = 100;

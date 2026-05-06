@@ -1,66 +1,75 @@
 ﻿using System;
 using System.IO;
-using System.IO.Compression;
 using System.Windows;
+using System.Windows.Threading;
+using HollywoodEditor.ViewModels;
 
 namespace HollywoodEditor
 {
-    // Из-за нестабильной работы редактора, то мне пришлось вводить специальную отладку, дабы выявить нестыковки привязок из-за которых все заедало;
     public partial class App : Application
     {
-
-        public static string PathToExe = AppDomain.CurrentDomain.BaseDirectory;
+        public static string PathToExe { get; private set; }
+        public static string GamePath { get; private set; }
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            EnsureResourcesUnpacked();
-        }
-        public App()
-        {
-            DispatcherUnhandledException += OnDispatcherUnhandledException;
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
-        }
 
-        private void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
-        {
-            MessageBox.Show($"Ошибка: {e.Exception.Message}");
-            e.Handled = true; // или false, если хотите, чтобы приложение падало
+            // Устанавливаем путь к исполняемому файлу
+            PathToExe = AppDomain.CurrentDomain.BaseDirectory;
+
+            // Загружаем локализацию
+            LoadLocalization();
+
+            // Обработка необработанных исключений
+            DispatcherUnhandledException += App_DispatcherUnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         }
 
-        private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private void LoadLocalization()
         {
-            var ex = e.ExceptionObject as Exception;
-            MessageBox.Show($"Критическая ошибка: {ex?.Message}");
-        }
-        private void EnsureResourcesUnpacked()
-        {
-            //string resDir = Path.Combine(PathToExe, "Resources");
-            //string profilesDir = Path.Combine(resDir, "Profiles");
-            //string yzFile = Path.Combine(resDir, "Profiles.yz");
-
-            //     if (Directory.Exists(profilesDir))
-            //         return;
-
-            // если архива нет — предупредим, чтобы пользователь понимал
-            //if (!File.Exists(yzFile))
-            //{
-            //    MessageBox.Show(
-            //        "Resource archive not found (Profiles.yz).\n" +
-            //        "Character icons will not be displayed..",
-            //        "Attention", MessageBoxButton.OK, MessageBoxImage.Warning);
-            //    return;
-            //}
-            //try
+            try
             {
+                string locPath = Path.Combine(PathToExe, "Resources", "Localization.yz");
+                if (File.Exists(locPath))
+                {
+                    // Распаковываем локализацию
+                    string extractPath = Path.Combine(PathToExe, "Resources", "Localization");
+                    if (!Directory.Exists(extractPath))
+                    {
+                        Directory.CreateDirectory(extractPath);
+                        System.IO.Compression.ZipFile.ExtractToDirectory(locPath, extractPath);
+                    }
 
-                // ZipFile.ExtractToDirectory(yzFile, resDir);
+                    // Загружаем переводы
+                    string langFile = Path.Combine(extractPath, "en.json");
+                    if (File.Exists(langFile))
+                    {
+                        string json = File.ReadAllText(langFile);
+                        MainModel.LocaleTranslator = Newtonsoft.Json.JsonConvert
+                        .DeserializeObject<System.Collections.Generic.Dictionary<string, string>>(json);
+                    }
+                }
             }
-            //catch (Exception ex)
+            catch (Exception ex)
             {
-                //       MessageBox.Show(
-                //         $"Error unpacking resources:\n{ex.Message}",
-                //           "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Diagnostics.Debug.WriteLine($"Error loading localization: {ex.Message}");
+            }
+        }
+
+        private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show($"Unhandled exception: {e.Exception.Message}\n\n{e.Exception.StackTrace}",
+                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            e.Handled = true;
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            if (e.ExceptionObject is Exception ex)
+            {
+                MessageBox.Show($"Unhandled exception: {ex.Message}\n\n{ex.StackTrace}",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

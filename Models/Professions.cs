@@ -174,5 +174,10 @@ namespace HollywoodEditor.Models
                 return hash;
             }
         }
+        public void SetValueWithoutCheck(double newValue)
+        {
+            if (Math.Abs(Value - newValue) < 0.001) return;
+            Value = newValue;
+        }
     }
 }

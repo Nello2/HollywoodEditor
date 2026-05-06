@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace HollywoodEditor
 {
@@ -12,20 +14,145 @@ namespace HollywoodEditor
         public MainWindow()
         {
             InitializeComponent();
-            // Обработчик для отладки ошибок привязки
             Style = (Style)FindResource(typeof(Window));
-            System.Windows.Data.BindingOperations.SetBinding(
-                this,
-                System.Windows.Controls.Primitives.Selector.SelectedItemProperty,
-                new System.Windows.Data.Binding());
-            //string mi = $"{App.PathToExe}Resources";
-            //string local_dir = $"{mi}\\Localization\\";
-            //string path_to_loc = $"{mi}\\Localization.yz";
-            //bool arch_loc_exist = Path.Exists(path_to_loc);
-            //if (arch_loc_exist)
-            //    File.Delete(path_to_loc);
-            //ZipFile.CreateFromDirectory(local_dir, path_to_loc);
-            //ZipFile.CreateFromDirectory("C:\\Users\\bigja\\source\\repos\\HollyJson\\Resources\\Localization", "C:\\Users\\bigja\\source\\repos\\HollyJson\\Resources\\Localization.yz");
+            var model = DataContext as HollywoodEditor.ViewModels.MainModel;
+            string startLocale = (HollywoodEditor.ViewModels.MainModel.CurrentLocale == "ENG") ? "en" : "ru";
+            SetLocale(startLocale);
+        }
+
+        private void BtnEnglish_Click(object sender, RoutedEventArgs e)
+        {
+            SetLocale("en");
+        }
+
+        private void BtnRussian_Click(object sender, RoutedEventArgs e)
+        {
+            SetLocale("ru");
+        }
+
+        private void SetLocale(string locale)
+        {
+            var model = DataContext as HollywoodEditor.ViewModels.MainModel;
+            if (model == null) return;
+
+            // Сначала фиксируем язык в модели и в Application.Properties,
+            // чтобы другие окна (SettingsWindow, Tags, Study Manager) сразу видели текущую локаль.
+
+            HollywoodEditor.ViewModels.MainModel.CurrentLocale = locale == "en" ? "ENG" : "RUS";
+            Application.Current.Properties["Locale"] = locale == "en" ? "ENG" : "RUS";
+
+            // ВАЖНО: локализация может быть подключена и в Application.Resources,
+            // и прямо в Window.Resources. Если менять только Application.Resources,
+
+            ApplyLocaleDictionary(Application.Current.Resources, locale);
+            ApplyLocaleDictionary(this.Resources, locale);
+
+            model.UnzipResources();
+            model.RefreshAllCharacterLabels();
+            model.RefershLocale();
+
+            UpdateFlagButtonsState(locale);
+            RefreshVisualTreeResources(this);
+        }
+
+        private void Calc_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var window = new CalcWindow();
+                window.Owner = this;
+                window.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Calculator", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void Perks_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var window = new PerksWindow();
+                window.Owner = this;
+                window.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Perks", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void ApplyLocaleDictionary(ResourceDictionary resources, string locale)
+        {
+            if (resources == null) return;
+
+            var oldDicts = resources.MergedDictionaries
+                .Where(d => d.Source != null &&
+                            (d.Source.OriginalString.Contains("Strings.en.xaml") ||
+                             d.Source.OriginalString.Contains("Strings.ru.xaml")))
+                .ToList();
+
+            foreach (var dict in oldDicts)
+                resources.MergedDictionaries.Remove(dict);
+
+            resources.MergedDictionaries.Add(new ResourceDictionary
+            {
+                Source = new Uri(locale == "ru"
+                    ? "Resources/Strings.ru.xaml"
+                    : "Resources/Strings.en.xaml", UriKind.Relative)
+            });
+        }
+
+        private void RefreshVisualTreeResources(DependencyObject parent)
+        {
+            if (parent == null) return;
+
+            int count = VisualTreeHelper.GetChildrenCount(parent);
+            for (int i = 0; i < count; i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+                var frameworkElement = child as FrameworkElement;
+                if (frameworkElement != null)
+                {
+                    frameworkElement.InvalidateProperty(FrameworkElement.StyleProperty);
+                    frameworkElement.UpdateLayout();
+                }
+
+                RefreshVisualTreeResources(child);
+            }
+        }
+        private T FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+                if (child is T result)
+                    return result;
+
+                var descendant = FindVisualChild<T>(child);
+                if (descendant != null)
+                    return descendant;
+            }
+            return null;
+        }
+
+        private void UpdateFlagButtonsState(string activeLocale)
+        {
+
+            BtnEnglish.BorderBrush = Brushes.Transparent;
+            BtnRussian.BorderBrush = Brushes.Transparent;
+            BtnEnglish.BorderThickness = new Thickness(2);
+            BtnRussian.BorderThickness = new Thickness(2);
+
+            if (activeLocale == "en")
+            {
+                BtnEnglish.BorderBrush = new SolidColorBrush(Color.FromRgb(0x4C, 0xAF, 0x50)); // #4CAF50
+            }
+            else if (activeLocale == "ru")
+            {
+                BtnRussian.BorderBrush = new SolidColorBrush(Color.FromRgb(0x4C, 0xAF, 0x50));
+            }
         }
 
         private void NumberValidation(object sender, TextCompositionEventArgs e)
@@ -33,6 +160,7 @@ namespace HollywoodEditor
             Regex regex = new Regex(@"[^0-9]");
             e.Handled = regex.IsMatch(e.Text);
         }
+
         //с точкой
         private void DoubleValidation(object sender, TextCompositionEventArgs e)
         {
@@ -128,7 +256,6 @@ namespace HollywoodEditor
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             var z = (sender as TextBox);
-            //все таки по тагу смотреть... и переключаться на нужные проверки...
             string tags = z.Tag?.ToString();
             if (z.Text == "∞")
                 return;
@@ -139,6 +266,11 @@ namespace HollywoodEditor
                         e.Handled = !CheckString(z.Text);
                     break;
                 case "INT":
+                    if (string.IsNullOrEmpty(z.Text) || z.Text == "0")
+                    {
+                        e.Handled = false;
+                        return;
+                    }
                     e.Handled = !CheckIntegerFull(z.Text);
                     break;
                 case "AGE":
@@ -177,6 +309,7 @@ namespace HollywoodEditor
         {
 
         }
+
         private void GitHubLogo_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             try
@@ -193,6 +326,7 @@ namespace HollywoodEditor
                                 MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
         private void GitVers_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             try
@@ -208,7 +342,6 @@ namespace HollywoodEditor
                 MessageBox.Show($"Не удалось открыть ссылку: {ex.Message}", "Ошибка",
                                 MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
         }
 
         private void TextBox_TextChanged_1(object sender, TextChangedEventArgs e)

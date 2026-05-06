@@ -5,13 +5,24 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+
 
 namespace HollywoodEditor.Models
 {
     [AddINotifyPropertyChangedInterface]
     public class Character
     {
+        // Технические черты для скрытия
+
+        private static readonly HashSet<string> HiddenTraits = new HashSet<string>
+        {
+            "STERILE",
+            "IMMORTAL",
+            "SUPER_IMMORTAL"
+        };
+
         public static List<string> Labels => new List<string>()
         {
             "HARDWORKING", "LAZY", "DISCIPLINED", "UNDISCIPLINED", "PERFECTIONIST",
@@ -34,6 +45,8 @@ namespace HollywoodEditor.Models
         private bool isDead;
         private DateTime CurrNow = new DateTime();
         private double limit1;
+        private ObservableCollection<string> _labels;
+        private string customPortraitPath;
 
         [JsonIgnore]
         public bool IsInit { get; set; }
@@ -99,7 +112,6 @@ namespace HollywoodEditor.Models
 
         [JsonIgnore]
         public Professions professions { get; set; }
-
         public Contract contract { get; set; }
 
         [JsonIgnore]
@@ -107,7 +119,33 @@ namespace HollywoodEditor.Models
 
         public List<string> aSins { get; set; }
 
-        public ObservableCollection<string> labels { get; set; }
+        public ObservableCollection<string> labels
+        {
+            get => _labels;
+            set
+            {
+                _labels = value;
+                UpdateFilteredLabels();
+            }
+        }
+
+        [JsonIgnore]
+        public ObservableCollection<string> FilteredLabels { get; private set; } = new ObservableCollection<string>();
+
+        public void UpdateFilteredLabels()
+        {
+            FilteredLabels.Clear();
+            if (_labels != null)
+            {
+                foreach (var label in _labels)
+                {
+                    if (!HiddenTraits.Contains(label))
+                    {
+                        FilteredLabels.Add(label);
+                    }
+                }
+            }
+        }
 
         public string deathDate { get; set; }
         public int causeOfDeath { get; set; }
@@ -119,16 +157,55 @@ namespace HollywoodEditor.Models
         public int ContractDaysLeft => contract?.DaysLeft ?? 0;
 
         [JsonIgnore]
-        public int ContractAmount => contract?.amount ?? 0;
+        public int ContractAmount
+        {
+            get => contract?.amount ?? 0;
+            set
+            {
+                if (contract != null)
+                {
+                    contract.amount = value;
+                }
+            }
+        }
 
-        [JsonIgnore]
-        public double ContractInitialFee => contract?.initialFee ?? 0;
+        public double ContractInitialFee
+        {
+            get => contract?.initialFee ?? 0;
+            set
+            {
+                if (contract != null)
+                {
+                    contract.initialFee = value;
+                }
+            }
+        }
 
-        [JsonIgnore]
-        public double ContractMonthlySalary => contract?.monthlySalary ?? 0;
+        [JsonProperty("monthlySalary")]
+        public double ContractMonthlySalary
+        {
+            get => contract?.monthlySalary ?? 0;
+            set
+            {
+                if (contract != null)
+                {
+                    contract.monthlySalary = value;
+                }
+            }
+        }
 
-        [JsonIgnore]
-        public double ContractWeightToSalary => contract?.weightToSalary ?? 0;
+        [JsonProperty("weightToSalary")]
+        public double ContractWeightToSalary
+        {
+            get => contract?.weightToSalary ?? 0;
+            set
+            {
+                if (contract != null)
+                {
+                    contract.weightToSalary = value;
+                }
+            }
+        }
 
         [JsonIgnore]
         public DateTime ContractDateOfSigning => contract?.dateOfSigning ?? stateJson.GameStartTime;
@@ -139,6 +216,27 @@ namespace HollywoodEditor.Models
         [JsonIgnore]
         public int ContractType => contract?.contractType ?? 0;
 
+        [JsonIgnore]
+        public string CustomPortraitPath
+        {
+            get => customPortraitPath;
+            set
+            {
+                customPortraitPath = value;
+                if (!string.IsNullOrEmpty(value))
+                {
+                    // Извлекаем portraitBaseId из пути файла
+
+                    string fileName = Path.GetFileNameWithoutExtension(value);
+                    string[] parts = fileName.Split('_');
+                    if (parts.Length >= 5 && int.TryParse(parts[4], out int newId))
+                    {
+                        portraitBaseId = newId;
+                    }
+                }
+            }
+        }
+
         public Character()
         {
             IsInit = true;
@@ -147,6 +245,7 @@ namespace HollywoodEditor.Models
             aSins = new List<string>();
             AvalibaleSkills = new List<string>();
             AvalibaleTraits = new List<string>();
+            FilteredLabels = new ObservableCollection<string>();
         }
 
         #region custom
@@ -251,6 +350,77 @@ namespace HollywoodEditor.Models
             Age = age;
         }
 
+        public string ImgPath
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(CustomPortraitPath) && File.Exists(CustomPortraitPath))
+                    return CustomPortraitPath;
+
+                string path = Path.Combine(App.PathToExe, "Resources", "Profiles") + Path.DirectorySeparatorChar;
+                path += "PRT_";
+
+                switch (professions?.GetProfession)
+                {
+                    case Professions.Profession.Agent:
+                        path += "AGENT_";
+                        break;
+
+                    case Professions.Profession.LieutScript:
+                    case Professions.Profession.LieutPrep:
+                    case Professions.Profession.LieutProd:
+                    case Professions.Profession.LieutPost:
+                    case Professions.Profession.LieutRelease:
+                    case Professions.Profession.LieutSecurity:
+                    case Professions.Profession.LieutProducers:
+                    case Professions.Profession.LieutInfrastructure:
+                    case Professions.Profession.LieutTech:
+                    case Professions.Profession.LieutMuseum:
+                    case Professions.Profession.LieutEscort:
+                    case Professions.Profession.CptHR:
+                    case Professions.Profession.CptLawyer:
+                    case Professions.Profession.CptFinancier:
+                    case Professions.Profession.CptPR:
+                        path += "LIEUT_";
+                        break;
+
+                    default:
+                        path += "TALENT_";
+                        break;
+                }
+
+                path += gender == 1 ? "F_" : "M_";
+
+                if (Age >= 60)
+                    path += "OLD_";
+                else if (Age > 40 && Age < 60)
+                    path += "MID_";
+                else
+                    path += "YOUNG_";
+
+                path += $"{portraitBaseId}.png";
+
+                // Если файл существует — отдаём именно его. 
+
+                if (File.Exists(path))
+                    return path;
+
+                // Иногда Profiles.zip распаковывается с дополнительной вложенной папкой Profiles.
+                // Не меняем тип/пол/возраст, а ищем только тот же самый файл рекурсивно.
+
+                string profilesRoot = Path.Combine(App.PathToExe, "Resources", "Profiles");
+                if (Directory.Exists(profilesRoot))
+                {
+                    string wanted = Path.GetFileName(path);
+                    string found = Directory.GetFiles(profilesRoot, wanted, SearchOption.AllDirectories).FirstOrDefault();
+                    if (!string.IsNullOrEmpty(found) && File.Exists(found))
+                        return found;
+                }
+
+                return "pack://application:,,,/Resources/user.png";
+            }
+        }
+
         public List<string> AvalibaleSkills { get; set; }
 
         public void SetAvSkills()
@@ -295,6 +465,16 @@ namespace HollywoodEditor.Models
         }
 
         public List<string> AvalibaleTraits { get; set; }
+
+        [JsonIgnore]
+        public List<string> FilteredAvalibaleTraits
+        {
+            get
+            {
+                if (AvalibaleTraits == null) return new List<string>();
+                return AvalibaleTraits.Where(t => !HiddenTraits.Contains(t)).ToList();
+            }
+        }
 
         public void SetAvTraits()
         {
@@ -344,7 +524,7 @@ namespace HollywoodEditor.Models
 
             Character other = (Character)obj;
 
-            return limit == other.limit &&
+            bool basicEquals = limit == other.limit &&
                    mood == other.mood &&
                    attitude == other.attitude &&
                    id == other.id &&
@@ -356,6 +536,24 @@ namespace HollywoodEditor.Models
                    gender == other.gender &&
                    studioId == other.studioId &&
                    state == other.state;
+
+            if (!basicEquals) return false;
+
+            if (labels == null && other.labels != null) return false;
+            if (labels != null && other.labels == null) return false;
+            if (labels != null && other.labels != null)
+            {
+                if (!labels.SequenceEqual(other.labels)) return false;
+            }
+
+            if (contract == null && other.contract != null) return false;
+            if (contract != null && other.contract == null) return false;
+            if (contract != null && other.contract != null)
+            {
+                if (contract != other.contract) return false;
+            }
+
+            return true;
         }
 
         public override int GetHashCode() => id.GetHashCode();
@@ -425,6 +623,11 @@ namespace HollywoodEditor.Models
 
                     z.whiteTagsNEW.Add(whiteTag);
                 }
+            }
+
+            if (z.labels != null)
+            {
+                z.UpdateFilteredLabels();
             }
 
             z.SetAvSkills();

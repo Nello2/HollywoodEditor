@@ -10,35 +10,82 @@
         Icon="/main.ico"
         ResizeMode="CanMinimize"
         WindowStartupLocation="CenterScreen"
-        Title="Hollywood Editor" Height="790" Width="880" MinWidth="850">
+        Title="{DynamicResource AppTitle}" Height="800" Width="880" MinWidth="850">
 
     <Window.DataContext>
         <local:MainModel/>
     </Window.DataContext>
 
     <Window.Resources>
-        <local:DateTimeToDateConverter x:Key="myDateConverter" />
-        <local:LangStringConverter x:Key="LocaleConverter" />
-        <local:NotNullToBoolConverter x:Key="NotNullToBoolConverter"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Strings.en.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
-        <Style TargetType="{x:Type TextBox}" x:Key="txtbox">
-            <Setter Property="IsEnabled" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Window}}, Path=DataContext.Save_Loaded}"/>
-            <EventSetter Event="TextChanged" Handler="TextBox_TextChanged"/>
-            <EventSetter Event="PreviewTextInput" Handler="TextBox_PreviewTextInput"/>
-            <EventSetter Event="DataObject.Pasting" Handler="PastingHandler"/>
-        </Style>
+            <local:DateTimeToDateConverter x:Key="myDateConverter" />
+            <local:LangStringConverter x:Key="LocaleConverter" />
+            <local:NotNullToBoolConverter x:Key="NotNullToBoolConverter"/>
+            <local:ZeroToEmptyConverter x:Key="ZeroToEmptyConverter"/>
+            <Style TargetType="{x:Type TextBox}" x:Key="txtbox">
+                <Setter Property="IsEnabled" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Window}}, Path=DataContext.Save_Loaded}"/>
+                <EventSetter Event="TextChanged" Handler="TextBox_TextChanged"/>
+                <EventSetter Event="PreviewTextInput" Handler="TextBox_PreviewTextInput"/>
+                <EventSetter Event="DataObject.Pasting" Handler="PastingHandler"/>
+            </Style>
 
-        <Style TargetType="{x:Type Button}">
-            <Setter Property="IsEnabled" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Window}}, Path=DataContext.Save_Loaded}"/>
-        </Style>
+            <Style TargetType="{x:Type TextBox}" x:Key="NoHighlightOnZero" BasedOn="{StaticResource txtbox}">
+                <Style.Triggers>
+                    <Trigger Property="Text" Value="0">
+                        <Setter Property="Background" Value="White"/>
+                        <Setter Property="BorderBrush" Value="#FFABADB3"/>
+                    </Trigger>
+                    <Trigger Property="Text" Value="0.0">
+                        <Setter Property="Background" Value="White"/>
+                        <Setter Property="BorderBrush" Value="#FFABADB3"/>
+                    </Trigger>
+                    <Trigger Property="Text" Value="0.00">
+                        <Setter Property="Background" Value="White"/>
+                        <Setter Property="BorderBrush" Value="#FFABADB3"/>
+                    </Trigger>
+                    <Trigger Property="Text" Value="0.000">
+                        <Setter Property="Background" Value="White"/>
+                        <Setter Property="BorderBrush" Value="#FFABADB3"/>
+                    </Trigger>
+                    <Trigger Property="Text" Value="">
+                        <Setter Property="Background" Value="White"/>
+                        <Setter Property="BorderBrush" Value="#FFABADB3"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
 
-        <Style TargetType="{x:Type CheckBox}">
-            <Setter Property="IsEnabled" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Window}}, Path=DataContext.Save_Loaded}"/>
-        </Style>
+            <Style TargetType="{x:Type Button}">
+                <Setter Property="IsEnabled" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Window}}, Path=DataContext.Save_Loaded}"/>
+            </Style>
 
-        <Style TargetType="{x:Type ComboBox}">
-            <Setter Property="IsEnabled" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Window}}, Path=DataContext.Save_Loaded}"/>
-        </Style>
+            <Style TargetType="{x:Type CheckBox}">
+                <Setter Property="IsEnabled" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Window}}, Path=DataContext.Save_Loaded}"/>
+            </Style>
+
+            <Style TargetType="{x:Type ComboBox}">
+                <Setter Property="IsEnabled" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Window}}, Path=DataContext.Save_Loaded}"/>
+            </Style>
+            <Style x:Key="LocaleFlagButton" TargetType="Button">
+                <Setter Property="Width" Value="30"/>
+                <Setter Property="Height" Value="25"/>
+                <Setter Property="Margin" Value="5,0,0,0"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="2"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="Padding" Value="0"/>
+                <Style.Triggers>
+                    <Trigger Property="IsEnabled" Value="False">
+                        <Setter Property="BorderBrush" Value="#4CAF50"/>
+                        <Setter Property="BorderThickness" Value="2"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
     </Window.Resources>
 
     <Grid>
@@ -54,14 +101,13 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Левая панель -->
         <StackPanel Grid.Column="0" Background="#801A0A0A" Margin="10">
             <Image Source="/Resources/logo_hollywood.png" 
                    Height="80" 
                    Margin="0,10,0,20" 
                    Stretch="Uniform"/>
 
-            <TextBlock Text="v0.2.4B for 0.8.68EA" 
+            <TextBlock Text="v0.2.5C for 0.8.70EA" 
                        Foreground="White" 
                        HorizontalAlignment="Center"
                        Margin="0,10,0,5"
@@ -102,7 +148,6 @@
                    MouseLeftButtonDown="GitVers_MouseLeftButtonDown" Margin="0,10,0,0"/>
         </StackPanel>
 
-        <!-- Правая основная панель -->
         <Grid Grid.Column="1" Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -114,7 +159,6 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Панель с информацией о студии -->
             <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -135,14 +179,28 @@
                 </DockPanel>
 
                 <StackPanel Orientation="Horizontal" Grid.Column="1">
-                    <Button Command="{Binding OpenFileCmd}" CommandParameter="Names" 
-                            Height="25" Width="25" Margin="5,0,0,0" IsEnabled="True">
+                    <Button x:Name="BtnEnglish" Style="{StaticResource LocaleFlagButton}"
+                            Click="BtnEnglish_Click"
+                            ToolTip="{DynamicResource SwitchToEnglish}">
                         <Button.Content>
-                            <Image Source="/Resources/user.png"/>
+                            <Image Source="/Resources/flag_uk.png" Stretch="Uniform" Width="24" Height="20"/>
                         </Button.Content>
-                        <Button.ToolTip>
-                            <TextBlock Padding="0" Text="Open CHARACTER_NAMES file for better usability"/>
-                        </Button.ToolTip>
+                    </Button>
+
+                    <Button x:Name="BtnRussian" Style="{StaticResource LocaleFlagButton}"
+                            Click="BtnRussian_Click"
+                            ToolTip="{DynamicResource SwitchToRussian}">
+                        <Button.Content>
+                            <Image Source="/Resources/flag_russia.png" Stretch="Uniform" Width="24" Height="20"/>
+                        </Button.Content>
+                    </Button>
+                    <!-- Удалено!-->
+                    <Button Click="Calc_Click"
+                            Height="25" Width="25" Margin="5,0,0,0" IsEnabled="True"
+                            ToolTip="{DynamicResource CalculatorTooltip}">
+                        <Button.Content>
+                            <Image Source="/Resources/calc.png"/>
+                        </Button.Content>
                     </Button>
 
                     <Button Command="{Binding OpenFileCmd}" CommandParameter="OFD" 
@@ -151,13 +209,12 @@
                             <Image Source="/Resources/ofd.png"/>
                         </Button.Content>
                         <Button.ToolTip>
-                            <TextBlock Padding="0" Text="Open save.json file"/>
+                            <TextBlock Padding="0" Text="{DynamicResource OpenSaveTooltip}"/>
                         </Button.ToolTip>
                     </Button>
                 </StackPanel>
             </Grid>
 
-            <!-- Панель с фильтрами -->
             <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -195,25 +252,25 @@
                         <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource txtbox}"/>
                     </Grid.Resources>
 
-                    <Label Content="Budget" Grid.Column="0"/>
+                    <Label Content="{DynamicResource Budget}" Grid.Column="0"/>
                     <TextBox Text="{Binding Info.budget}" Height="22" VerticalContentAlignment="Center"
                               Grid.Column="1" Tag="INT"/>
 
-                    <Label Content="Cash" Grid.Column="2"/>
+                    <Label Content="{DynamicResource Cash}" Grid.Column="2"/>
                     <TextBox Text="{Binding Info.cash}" VerticalContentAlignment="Center" Height="22"
                               Grid.Column="3" Tag="INT"/>
 
-                    <Label Content="Reputation" Grid.Column="4"/>
+                    <Label Content="{DynamicResource Reputation}" Grid.Column="4"/>
                     <TextBox Text="{Binding Info.reputation, StringFormat={}{0:0.0}}" 
                              VerticalContentAlignment="Center" Height="22"
                              Grid.Column="5" Tag="DBL"/>
 
-                    <Label Content="Influence" Grid.Column="6"/>
+                    <Label Content="{DynamicResource Influence}" Grid.Column="6"/>
                     <TextBox Text="{Binding Info.influence}" VerticalContentAlignment="Center" Height="22"
                                Grid.Column="7" Tag="DBL"/>
 
                     <DockPanel Grid.Row="1" Grid.ColumnSpan="8" Margin="5,5,0,0">
-                        <Label Content="Active studio politics" Foreground="White"/>
+                        <Label Content="{DynamicResource ActiveStudioPolitics}" Foreground="White"/>
                         <Label Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" 
                                Content="{Binding Info.NameOfActivePolicy, Converter={StaticResource LocaleConverter}}" 
                                HorizontalAlignment="Center" Width="100" Margin="5,0" Foreground="White"/>
@@ -228,21 +285,22 @@
                                                          Foreground="White"/>
 
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Height="22" Margin="0,0,5,0">
-                            <Button Padding="5,0,5,0" Command="{Binding ShowSpawnDateCmd}" Margin="0,0,5,0" Width="85">
+
+                            <Button Padding="5,0,5,0" Command="{Binding ShowSpawnWindowCmd}" Margin="0,0,5,0" Width="85">
                                 <Button.Content>
-                                    <TextBlock Padding="0" TextAlignment="Center" TextTrimming="CharacterEllipsis" Text="Show Spawns"/>
+                                    <TextBlock Padding="0" TextAlignment="Center" TextTrimming="CharacterEllipsis" Text="{DynamicResource ShowSpawns}"/>
                                 </Button.Content>
                             </Button>
 
-                            <Button Padding="5,0,5,0" Command="{Binding ShowTechsCmd}" Margin="5,0,5,0" Width="110">
+                            <Button Padding="5,0,5,0" Command="{Binding ShowTechsWindowCmd}" Margin="5,0,5,0" Width="110">
                                 <Button.Content>
-                                    <TextBlock Padding="0" TextAlignment="Center" TextTrimming="CharacterEllipsis" Text="Show closed Techs"/>
+                                    <TextBlock Padding="0" TextAlignment="Center" TextTrimming="CharacterEllipsis" Text="{DynamicResource ShowTechs}"/>
                                 </Button.Content>
                             </Button>
 
-                            <Button Padding="5,0,5,0" Command="{Binding ShowTagsCmd}" Margin="5,0,0,0" Width="110">
+                            <Button Padding="5,0,5,0" Command="{Binding ShowTagsWindowCmd}" Margin="5,0,0,0" Width="110">
                                 <Button.Content>
-                                    <TextBlock Padding="0" TextAlignment="Center" TextTrimming="CharacterEllipsis" Text="Show closed Tags"/>
+                                    <TextBlock Padding="0" TextAlignment="Center" TextTrimming="CharacterEllipsis" Text="{DynamicResource ShowTags}"/>
                                 </Button.Content>
                             </Button>
                         </StackPanel>
@@ -250,7 +308,6 @@
                 </Grid>
             </Grid>
 
-            <!-- Левая колонка -->
             <Grid Grid.Row="2" Grid.Column="0" Margin="5,5,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
@@ -282,7 +339,7 @@
                 </TextBox>
 
                 <ComboBox Grid.Column="2" Margin="0,0,0,5" 
-                          ItemsSource="{Binding ProfList}" SelectedItem="{Binding Filter_Prof}" 
+                          ItemsSource="{Binding ProfList}" SelectedItem="{Binding Filter_Prof, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                           ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text, Converter={StaticResource LocaleConverter}}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -299,15 +356,15 @@
                         <ColumnDefinition Width="108*"/>
                     </Grid.ColumnDefinitions>
 
-                    <CheckBox Content="Show only Dead" VerticalAlignment="Center" VerticalContentAlignment="Center"
+                    <CheckBox Content="{DynamicResource ShowOnlyDead}" VerticalAlignment="Center" VerticalContentAlignment="Center"
                               HorizontalAlignment="Center" IsChecked="{Binding ShowOnlyDead}" 
                               Foreground="White" Height="15" Width="100" FontSize="11"/>
 
-                    <CheckBox Content="Show With Dead" Grid.Column="1" VerticalAlignment="Bottom" VerticalContentAlignment="Center"
+                    <CheckBox Content="{DynamicResource ShowWithDead}" Grid.Column="1" VerticalAlignment="Bottom" VerticalContentAlignment="Center"
                               HorizontalAlignment="Center" IsChecked="{Binding ShowWithDead}" 
                               Foreground="White" Height="15" Width="106" FontSize="11"/>
 
-                    <CheckBox Content="Show only Talent" Grid.Column="2" VerticalAlignment="Center" VerticalContentAlignment="Center"
+                    <CheckBox Content="{DynamicResource ShowOnlyTalent}" Grid.Column="2" VerticalAlignment="Center" VerticalContentAlignment="Center"
                               HorizontalAlignment="Center" IsChecked="{Binding ShowOnlyTalent}" 
                               Foreground="White" Width="108" Height="15" FontSize="11"/>
                 </Grid>
@@ -349,7 +406,6 @@
                     </ListView.ItemTemplate>
                 </ListView>
 
-                <!-- Массовые операции -->
                 <Grid Grid.Row="3" Grid.ColumnSpan="3">
                     <Grid.Resources>
                         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
@@ -374,42 +430,42 @@
 
                     <Button Grid.Column="1" Grid.Row="0" Command="{Binding SetMoodAndAttCmd}">
                         <Button.Content>
-                            <TextBlock Padding="0" Text="Set Mood and Att to 1.0" 
+                            <TextBlock Padding="0" Text="{DynamicResource SetMoodAndAtt}" 
                                        TextAlignment="Center" TextTrimming="CharacterEllipsis"/>
                         </Button.Content>
                     </Button>
 
                     <Button Grid.Column="2" Grid.Row="0" Command="{Binding SetMaxContrDaysCmd}">
                         <Button.Content>
-                            <TextBlock Padding="0" Text="Set Contract days to max" 
+                            <TextBlock Padding="0" Text="{DynamicResource SetContractDaysToMax}" 
                                        TextAlignment="Center" TextTrimming="CharacterEllipsis"/>
                         </Button.Content>
                     </Button>
 
                     <Button Grid.Column="1" Grid.Row="1" Command="{Binding SetSkillToLimitCmd}">
                         <Button.Content>
-                            <TextBlock Padding="0" Text="Set Skill to Limit" 
+                            <TextBlock Padding="0" Text="{DynamicResource SetSkillToLimit}" 
                                        TextAlignment="Center" TextTrimming="CharacterEllipsis"/>
                         </Button.Content>
                     </Button>
 
                     <Button Grid.Column="2" Grid.Row="1" Command="{Binding SetLimitToMaxCmd}">
                         <Button.Content>
-                            <TextBlock Padding="0" Text="Raise Limit to 1.0" 
+                            <TextBlock Padding="0" Text="{DynamicResource RaiseLimitToMax}" 
                                        TextAlignment="Center" TextTrimming="CharacterEllipsis"/>
                         </Button.Content>
                     </Button>
 
                     <Button Grid.Column="1" Grid.Row="2" Command="{Binding SetAgeToYoungCmd}">
                         <Button.Content>
-                            <TextBlock Padding="0" Text="Set Age to 18" 
+                            <TextBlock Padding="0" Text="{DynamicResource SetAgeTo18}" 
                                        TextAlignment="Center" TextTrimming="CharacterEllipsis"/>
                         </Button.Content>
                     </Button>
 
                     <Button Grid.Column="2" Grid.Row="2" Command="{Binding SetAllSkillsCmd}">
                         <Button.Content>
-                            <TextBlock Padding="0" Text="Get all skills (max)" 
+                            <TextBlock Padding="0" Text="{DynamicResource GetAllSkillsMax}" 
                                        TextAlignment="Center" TextTrimming="CharacterEllipsis"/>
                         </Button.Content>
                     </Button>
@@ -418,7 +474,6 @@
                 </Grid>
             </Grid>
 
-            <!-- Правая колонка -->
             <Grid Grid.Row="2" Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
@@ -437,13 +492,13 @@
                         <Setter Property="HorizontalContentAlignment" Value="Right"/>
                         <Setter Property="Padding" Value="0"/>
                         <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontWeight" Value="Normal"/>
                     </Style>
                     <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource txtbox}">
                         <Setter Property="Margin" Value="5"/>
                     </Style>
                 </Grid.Resources>
 
-                <!-- Блок с основной информацией -->
                 <Border Grid.Row="0" BorderThickness="1.5" BorderBrush="DarkGray" CornerRadius="5" Margin="5,5,0,0">
                     <Grid>
                         <Grid.Resources>
@@ -477,14 +532,16 @@
                             <ColumnDefinition Width="60"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-
-                        <Label Content="Name" Grid.Row="0" Grid.Column="1"/>
+                        <Border Grid.RowSpan="3" Margin="5">
+                            <Image Source="{Binding SelectedChar.ImgPath}" Stretch="Fill" />
+                        </Border>
+                        <Label Content="{DynamicResource Name}" Grid.Row="0" Grid.Column="1"/>
                         <TextBox Text="{Binding SelectedChar.MyCustomName}" 
                                  Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="3"
                                  HorizontalContentAlignment="Left" VerticalContentAlignment="Center" 
                                  Tag="STR" Foreground="Black"/>
 
-                        <Label Content="Studio Id" Grid.Row="1" Grid.Column="1"/>
+                        <Label Content="{DynamicResource StudioId}" Grid.Row="1" Grid.Column="1"/>
                         <Grid Grid.Row="1" Grid.Column="2" Margin="5,0,5,0" Height="20" Grid.ColumnSpan="3">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -515,24 +572,23 @@
                                    Width="17" Height="17" Opacity="0.7" Grid.Column="1">
                                 <Image.ToolTip>
                                     <StackPanel>
-                                        <TextBlock Text="If the choice is not available,"/>
-                                        <TextBlock Text="it means the character is busy at work"/>
+                                        <TextBlock Text="{DynamicResource StudioBusyTooltipLine1}"/>
+                                        <TextBlock Text="{DynamicResource StudioBusyTooltipLine2}"/>
                                     </StackPanel>
                                 </Image.ToolTip>
                             </Image>
                         </Grid>
 
-                        <Label Content="Mood" Grid.Row="2" Grid.Column="1" />
+                        <Label Content="{DynamicResource Mood}" Grid.Row="2" Grid.Column="1" />
                         <TextBox Text="{Binding SelectedChar.mood, StringFormat={}{0:0.00}}" 
                                  Grid.Row="2" Grid.Column="2" Tag="LMT" Foreground="Black"/>
 
-                        <Label Content="Attitude" Grid.Row="2" Grid.Column="3"/>
+                        <Label Content="{DynamicResource Attitude}" Grid.Row="2" Grid.Column="3"/>
                         <TextBox Text="{Binding SelectedChar.attitude, StringFormat={}{0:0.00}}" 
                                  Grid.Row="2" Grid.Column="4" Tag="LMT" Foreground="Black"/>
                     </Grid>
                 </Border>
 
-                <!-- Блок с профессией и возрастом -->
                 <Border Grid.Row="1" BorderThickness="1.5" BorderBrush="DarkGray" CornerRadius="5" Margin="5,5,0,0">
                     <Grid>
                         <Grid.Resources>
@@ -560,32 +616,32 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Label Content="Prof." Grid.Row="0" Grid.Column="0" HorizontalContentAlignment="Right"/>
+                        <Label Content="{DynamicResource Prof}" Grid.Row="0" Grid.Column="0" HorizontalContentAlignment="Right"/>
                         <TextBlock Text="{Binding SelectedChar.professions.ProfToDecode, Converter={StaticResource LocaleConverter}}" 
                                    Grid.Row="0" Grid.Column="1" Margin="5,0,0,0"
                                    TextTrimming="CharacterEllipsis" VerticalAlignment="Center" 
                                    ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}" 
                                    TextAlignment="Left" Foreground="White"/>
 
-                        <Label Content="Age" Grid.Row="0" Grid.Column="2"/>
+                        <Label Content="{DynamicResource Age}" Grid.Row="0" Grid.Column="2"/>
                         <TextBox Text="{Binding SelectedChar.Age}" Grid.Row="0" Grid.Column="3" 
                                  Tag="AGE" Foreground="Black"/>
 
-                        <Label Content="Birth" Grid.Row="1" Grid.Column="2"/>
+                        <Label Content="{DynamicResource Birth}" Grid.Row="1" Grid.Column="2"/>
                         <TextBlock Text="{Binding SelectedChar.GetBirthDate, Converter={StaticResource myDateConverter}}" 
                                    Grid.Row="1" Grid.Column="3"
                                    VerticalAlignment="Center" Margin="5,0" Foreground="White"/>
 
-                        <Label Content="Skill" Grid.Row="2" Grid.Column="2"/>
+                        <Label Content="{DynamicResource Skill}" Grid.Row="2" Grid.Column="2"/>
                         <TextBox Text="{Binding SelectedChar.professions.Value, StringFormat={}{0:0.00}}" 
                                  Grid.Row="2" Grid.Column="3" Tag="LMT" Foreground="Black"/>
 
-                        <Label Content="Limit" Grid.Row="1" Grid.Column="0" Margin="5,3,5,5"/>
+                        <Label Content="{DynamicResource Limit}" Grid.Row="1" Grid.Column="0" Margin="5,3,5,5"/>
                         <TextBox Text="{Binding SelectedChar.limit, StringFormat={}{0:0.0}}" 
                                  Grid.Row="1" Grid.Column="1" Tag="LMT" Margin="5,3,6,5" Foreground="Black"/>
 
                         <CheckBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" 
-                                  Content="Is Dead" VerticalAlignment="Center"
+                                  Content="{DynamicResource IsDead}" VerticalAlignment="Center"
                                   HorizontalAlignment="Left" IsChecked="{Binding SelectedChar.IsDead}" 
                                   Foreground="White" Margin="30,0,0,0">
                             <CheckBox.Style>
@@ -600,6 +656,8 @@
                         </CheckBox>
                     </Grid>
                 </Border>
+
+                <!-- Блок контракта -->
                 <Border Grid.Row="2" BorderThickness="1.5" BorderBrush="DarkGray" CornerRadius="5" Margin="5,5,0,0">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -615,11 +673,11 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Label Grid.Row="0" Content="Contract" Grid.ColumnSpan="2" HorizontalContentAlignment="Center"/>
-                        <Label Grid.Row="0" Grid.Column="2" Content="Days Left"/>
-
-                        <!-- Улучшена совместимость под 0.8.68EA -->
-                        <TextBox Grid.Row="0" Grid.Column="3" Tag="INT" Foreground="White"
+                        <Label Grid.Row="0" Grid.Column="0" Content="{DynamicResource Contract}" Grid.ColumnSpan="2" 
+                               HorizontalContentAlignment="Center" FontWeight="Normal" Foreground="White" Margin="5"/>
+                        <Label Grid.Row="0" Grid.Column="2" Content="{DynamicResource DaysLeft}" 
+                               HorizontalContentAlignment="Center" FontWeight="Normal" Foreground="White" Margin="5"/>
+                        <TextBox Grid.Row="0" Grid.Column="3" Tag="INT" Foreground="Black" Margin="5"
                                  Text="{Binding SelectedChar.ContractDaysLeft, Mode=OneWay, TargetNullValue=0, FallbackValue=0}">
                             <TextBox.Style>
                                 <Style TargetType="TextBox" BasedOn="{StaticResource txtbox}">
@@ -639,51 +697,78 @@
                             </TextBox.Style>
                         </TextBox>
 
-                        <Label Grid.Row="1" Grid.Column="0" Content="Date sign"/>
-                        <TextBlock Grid.Row="1" Grid.Column="1" Margin="5,0" VerticalAlignment="Center" Foreground="White"
+                        <Label Grid.Row="1" Grid.Column="0" Content="{DynamicResource DateSign}" 
+                               HorizontalContentAlignment="Right" VerticalAlignment="Center" 
+                               FontWeight="Normal" Foreground="White" Margin="5"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Margin="5,0" VerticalAlignment="Center" 
+                                   Foreground="White" FontWeight="Normal"
                                    Text="{Binding SelectedChar.ContractDateOfSigning, Converter={StaticResource myDateConverter}}"/>
 
-                        <Label Grid.Row="1" Grid.Column="2" Content="Date end"/>
-                        <TextBlock Grid.Row="1" Grid.Column="3" Margin="5,0" VerticalAlignment="Center" Foreground="White"
+                        <Label Grid.Row="1" Grid.Column="2" Content="{DynamicResource DateEnd}" 
+                               HorizontalContentAlignment="Right" VerticalAlignment="Center" 
+                               FontWeight="Normal" Foreground="White" Margin="5"/>
+                        <TextBlock Grid.Row="1" Grid.Column="3" Margin="5,0" VerticalAlignment="Center" 
+                                   Foreground="White" FontWeight="Normal"
                                    Text="{Binding SelectedChar.ContractDateOfEnding, Converter={StaticResource myDateConverter}}"/>
 
-                        <Label Grid.Row="2" Grid.Column="0" Content="Years"/>
-                        <TextBox Text="{Binding SelectedChar.ContractAmount, Mode=OneWay, TargetNullValue=0, FallbackValue=0}" 
-                                 Grid.Row="2" Grid.Column="1" Tag="INT" Foreground="Black"
-                                 IsEnabled="{Binding SelectedChar.contract, Converter={StaticResource NotNullToBoolConverter}}"/>
-
-                        <Label Grid.Row="2" Grid.Column="2" Content="Init fee"/>
-                        <TextBox Text="{Binding SelectedChar.ContractInitialFee, Mode=OneWay, TargetNullValue=0, FallbackValue=0}" 
-                                 Grid.Row="2" Grid.Column="3" Tag="INT" Foreground="Black"
-                                 IsEnabled="{Binding SelectedChar.contract, Converter={StaticResource NotNullToBoolConverter}}"/>
-
-                        <Label Grid.Row="3" Grid.Column="0" Content="M/s">
-                            <Label.ToolTip>
-                                <TextBlock Text="Month salary" Padding="0"/>
-                            </Label.ToolTip>
-                        </Label>
-                        <TextBox Text="{Binding SelectedChar.ContractMonthlySalary, Mode=OneWay, TargetNullValue=0, FallbackValue=0}" 
-                                 Grid.Row="3" Grid.Column="1" Tag="INT" Foreground="Black"
+                        <Label Grid.Row="2" Grid.Column="0" Content="{DynamicResource Years}" 
+                               HorizontalContentAlignment="Right" VerticalAlignment="Center" 
+                               FontWeight="Normal" Foreground="White" Margin="5"/>
+                        <TextBox Grid.Row="2" Grid.Column="1" Margin="5" Tag="INT" Foreground="Black"
+                                 Text="{Binding SelectedChar.contract.amount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                 Style="{StaticResource NoHighlightOnZero}"
                                  IsEnabled="{Binding SelectedChar.contract, Converter={StaticResource NotNullToBoolConverter}}">
                             <TextBox.ToolTip>
-                                <TextBlock Text="Month salary" Padding="0"/>
+                                <TextBlock Text="{DynamicResource Years}" Padding="0"/>
                             </TextBox.ToolTip>
                         </TextBox>
 
-                        <Label Grid.Row="3" Grid.Column="2" Content="W/s">
-                            <Label.ToolTip>
-                                <TextBlock Text="Weight salary" Padding="0"/>
-                            </Label.ToolTip>
-                        </Label>
-                        <TextBox Text="{Binding SelectedChar.ContractWeightToSalary, Mode=OneWay, TargetNullValue=0, FallbackValue=0}" 
-                                 Grid.Row="3" Grid.Column="3" Tag="INT" Foreground="Black"
+                        <Label Grid.Row="2" Grid.Column="2" Content="{DynamicResource InitFee}" 
+                               HorizontalContentAlignment="Right" VerticalAlignment="Center" 
+                               FontWeight="Normal" Foreground="White" Margin="5"/>
+                        <TextBox Grid.Row="2" Grid.Column="3" Margin="5" Tag="INT" Foreground="Black"
+                                 Text="{Binding SelectedChar.contract.initialFee, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                 Style="{StaticResource NoHighlightOnZero}"
                                  IsEnabled="{Binding SelectedChar.contract, Converter={StaticResource NotNullToBoolConverter}}">
                             <TextBox.ToolTip>
-                                <TextBlock Text="Weight salary" Padding="0"/>
+                                <TextBlock Text="{DynamicResource InitFee}" Padding="0"/>
+                            </TextBox.ToolTip>
+                        </TextBox>
+
+                        <Label Grid.Row="3" Grid.Column="0" Content="{DynamicResource MonthSalary}" 
+                               HorizontalContentAlignment="Right" VerticalAlignment="Center" 
+                               FontWeight="Normal" Foreground="White" Margin="5">
+                            <Label.ToolTip>
+                                <TextBlock Text="{DynamicResource MonthSalary}" Padding="0"/>
+                            </Label.ToolTip>
+                        </Label>
+                        <TextBox Grid.Row="3" Grid.Column="1" Margin="5" Tag="INT" Foreground="Black"
+                                 Text="{Binding SelectedChar.contract.monthlySalary, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                 Style="{StaticResource NoHighlightOnZero}"
+                                 IsEnabled="{Binding SelectedChar.contract, Converter={StaticResource NotNullToBoolConverter}}">
+                            <TextBox.ToolTip>
+                                <TextBlock Text="{DynamicResource MonthSalary}" Padding="0"/>
+                            </TextBox.ToolTip>
+                        </TextBox>
+
+                        <Label Grid.Row="3" Grid.Column="2" Content="{DynamicResource WeightSalary}" 
+                               HorizontalContentAlignment="Right" VerticalAlignment="Center" 
+                               FontWeight="Normal" Foreground="White" Margin="5">
+                            <Label.ToolTip>
+                                <TextBlock Text="{DynamicResource WeightSalary}" Padding="0"/>
+                            </Label.ToolTip>
+                        </Label>
+                        <TextBox Grid.Row="3" Grid.Column="3" Margin="5" Tag="INT" Foreground="Black"
+                                 Text="{Binding SelectedChar.contract.weightToSalary, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                 Style="{StaticResource NoHighlightOnZero}"
+                                 IsEnabled="{Binding SelectedChar.contract, Converter={StaticResource NotNullToBoolConverter}}">
+                            <TextBox.ToolTip>
+                                <TextBlock Text="{DynamicResource WeightSalary}" Padding="0"/>
                             </TextBox.ToolTip>
                         </TextBox>
                     </Grid>
                 </Border>
+
                 <Border Grid.Row="3" BorderThickness="1.5" BorderBrush="DarkGray" CornerRadius="5" Margin="5,5,0,0">
                     <Grid Margin="0,0">
                         <Grid.RowDefinitions>
@@ -696,25 +781,20 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <Label Grid.Column="0" Content="Traits" VerticalAlignment="Center" Margin="10,0,0,0"
+                        <Label Grid.Column="0" Content="{DynamicResource Traits}" VerticalAlignment="Center" Margin="10,0,0,0"
                                HorizontalAlignment="Left" Padding="0"/>
 
                         <Image Grid.Column="0" HorizontalAlignment="Left" Source="/Resources/question.png" 
                                Width="17" Height="17" Opacity="0.7" Margin="45,0">
                             <Image.ToolTip>
-                                <StackPanel>
-                                    <TextBlock Text="Order is important for ingame visual"/>
-                                    <TextBlock Text="Because shows only two first Traits"/>
-                                    <TextBlock Text="The good traits is primary shown"/>
-                                    <TextBlock Text="I'm really don't know does it matters =)"/>
-                                </StackPanel>
+                                <TextBlock Text="{DynamicResource TraitsOrderTooltip}"/>
                             </Image.ToolTip>
                         </Image>
 
                         <ComboBox Grid.Column="1" Margin="10,5,0,5" VerticalAlignment="Center" Padding="0" 
                                   Height="20" x:Name="TraitCmb" HorizontalAlignment="Right"
                                   IsEnabled="{Binding HasItems, RelativeSource={RelativeSource Self}}"
-                                  Width="150" ItemsSource="{Binding SelectedChar.AvalibaleTraits}" 
+                                  Width="150" ItemsSource="{Binding SelectedChar.FilteredAvalibaleTraits}" 
                                   VerticalContentAlignment="Center">
                             <ComboBox.Style>
                                 <Style TargetType="{x:Type ComboBox}">
@@ -747,7 +827,7 @@
                         </Button>
 
                         <ScrollViewer Margin="5,5,10,5" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="3" Foreground="White">
-                            <ItemsControl ItemsSource="{Binding SelectedChar.labels}" VerticalAlignment="Top">
+                            <ItemsControl ItemsSource="{Binding SelectedChar.FilteredLabels}" VerticalAlignment="Top">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <Grid Margin="0,2,0,0">
@@ -787,6 +867,7 @@
                         </ScrollViewer>
                     </Grid>
                 </Border>
+
                 <Border Grid.Row="4" BorderThickness="1.5" BorderBrush="DarkGray" CornerRadius="5" Margin="5,5,0,0">
                     <Grid Margin="0,0">
                         <Grid.ColumnDefinitions>
@@ -799,19 +880,13 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <Label Grid.Column="0" Content="Skills" VerticalAlignment="Center" Margin="10,0,0,0"
+                        <Label Grid.Column="0" Content="{DynamicResource Skills}" VerticalAlignment="Center" Margin="10,0,0,0"
                                HorizontalAlignment="Left" Padding="0"/>
 
                         <Image Grid.Column="0" HorizontalAlignment="Left" Source="/Resources/question.png" 
                                Width="17" Height="17" Opacity="0.7" Margin="45,0">
                             <Image.ToolTip>
-                                <StackPanel>
-                                    <TextBlock Text="If a character has gained any experience - we can't remove that skill completely." Padding="0"/>
-                                    <TextBlock Text="We can only manipulate the preset values of the skill (if these values are available)" Padding="0"/>
-                                    <TextBlock Text="Golden badge is given when the value of 12 and above is reached!" Padding="0"/>
-                                    <TextBlock Text="Artistic and commercial value of the character is set" Padding="0"/>
-                                    <TextBlock Text="in the range from 0.0 to 1.0 with increments of 0.25" Padding="0"/>
-                                </StackPanel>
+                                <TextBlock Text="{DynamicResource SkillsEditTooltip}"/>
                             </Image.ToolTip>
                         </Image>
 
@@ -865,7 +940,7 @@
                                             </Grid.ColumnDefinitions>
 
                                             <StackPanel Orientation="Horizontal" Margin="5,0,0,0">
-                                                <Label Content="Min." Padding="0" Margin="0"/>
+                                                <Label Content="{DynamicResource MinLabel}" Padding="0" Margin="0"/>
                                                 <TextBlock Text="{Binding MinimalValaue, StringFormat={}{0:#0.00}}" 
                                                            VerticalAlignment="Center" Padding="0"
                                                            HorizontalAlignment="Left" Width="30" 
@@ -897,6 +972,7 @@
                         </ScrollViewer>
                     </Grid>
                 </Border>
+
                 <Border Grid.Row="5" BorderThickness="1.5" BorderBrush="DarkGray" CornerRadius="5" Margin="5,5,0,0">
                     <Grid Margin="0,0">
                         <Grid.RowDefinitions>
@@ -904,7 +980,7 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <Label Grid.Row="0" Content="Known Sins" VerticalAlignment="Top"
+                        <Label Grid.Row="0" Content="{DynamicResource KnownSins}" VerticalAlignment="Top"
                                HorizontalAlignment="Center" Padding="0" Margin="5,5,0,0"/>
 
                         <ScrollViewer Margin="5,5,10,5" VerticalAlignment="Stretch" Grid.Row="1" Foreground="White">
@@ -921,39 +997,121 @@
                     </Grid>
                 </Border>
 
-                <!-- Нижняя панель -->
-                <Border Grid.Row="6" Grid.Column="1" Height="12" Padding="0" Margin="5,0" 
-                        HorizontalAlignment="Left" VerticalAlignment="Bottom">
-                    <TextBlock Text="{Binding StatusBarText}" Padding="0" Margin="0" 
-                               FontSize="10" VerticalAlignment="Center" Foreground="White"/>
-                </Border>
+                <Grid Grid.Row="6" Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Bottom">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                <Button Grid.Row="6" Grid.Column="1" Width="25" Height="25" 
-                        IsEnabled="{Binding Save_Loaded}"
-                        VerticalAlignment="Bottom" HorizontalAlignment="Right"
-                        Command="{Binding SaveCmd}">
-                    <Image Source="/Resources/save.png"/>
-                    <Button.Style>
-                        <Style>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Save_done}" Value="True">
-                                    <DataTrigger.EnterActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <ColorAnimation To="#7F00FF00" 
-                                                                Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)" 
-                                                                FillBehavior="Stop" AutoReverse="True" 
-                                                                Duration="0:0:1"/>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </DataTrigger.EnterActions>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                </Button>
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding StatusBarText}"
+                               ToolTip="{Binding StatusBarText}"
+                               Padding="0"
+                               Margin="0,0,8,0"
+                               FontSize="10"
+                               VerticalAlignment="Center"
+                               Foreground="White"
+                               TextWrapping="NoWrap"
+                               TextTrimming="CharacterEllipsis"/>
+
+                    <StackPanel Grid.Column="1"
+                                Orientation="Horizontal"
+                                VerticalAlignment="Bottom"
+                                HorizontalAlignment="Right"
+                                Margin="0,0,0,0">
+
+                        <Button Width="25" Height="25" 
+                            IsEnabled="{Binding Save_Loaded}"
+                            Command="{Binding ChangePortraitCmd}"
+                            Margin="0,0,5,0"
+                            ToolTip="{DynamicResource ChangePortraitTooltip}">
+                            <Image Source="/Resources/portrait.png"/>
+                            <Button.Style>
+                                <Style>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Portrait_done}" Value="True">
+                                            <DataTrigger.EnterActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <ColorAnimation To="#7F00FF00" 
+                                                                    Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)" 
+                                                                    FillBehavior="Stop" AutoReverse="True" 
+                                                                    Duration="0:0:1"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </DataTrigger.EnterActions>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+                        <Button Width="25" Height="25"
+                            IsEnabled="{Binding Save_Loaded}"
+                            Click="Perks_Click"
+                            Margin="0,0,5,0"
+                            ToolTip="{DynamicResource PerksTooltip}">
+                            <Image Source="/Resources/Perk.png"/>
+                        </Button>
+
+                        <Button Width="25" Height="25" 
+                            IsEnabled="{Binding Save_Loaded}"
+                            Command="{Binding OpenSettingsCmd}"
+                            Margin="0,0,5,0"
+                            ToolTip="{DynamicResource SettingsTooltip}">
+                            <Image Source="/Resources/gear.png"/>
+                            <Button.Style>
+                                <Style>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Settings_done}" Value="True">
+                                            <DataTrigger.EnterActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <ColorAnimation To="#7F00FF00" 
+                                                                    Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)" 
+                                                                    FillBehavior="Stop" AutoReverse="True" 
+                                                                    Duration="0:0:1"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </DataTrigger.EnterActions>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+                        <!-- Кнопка сохранения -->
+                        <Button Width="25" Height="25" 
+                            IsEnabled="{Binding Save_Loaded}"
+                            VerticalAlignment="Bottom" 
+                            HorizontalAlignment="Right"
+                            Command="{Binding SaveCmd}"
+                            ToolTip="{DynamicResource Save}">
+                            <Image Source="/Resources/save.png"/>
+                            <Button.Style>
+                                <Style>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Save_done}" Value="True">
+                                            <DataTrigger.EnterActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <ColorAnimation To="#7F00FF00" 
+                                                                    Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)" 
+                                                                    FillBehavior="Stop" AutoReverse="True" 
+                                                                    Duration="0:0:1"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </DataTrigger.EnterActions>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+                </Grid>
             </Grid>
         </Grid>
+
         <Border Grid.Row="0" Grid.RowSpan="3" Grid.ColumnSpan="2" Margin="0" 
                 VerticalAlignment="Center" Opacity="1" Grid.Column="1">
             <Border.Style>
