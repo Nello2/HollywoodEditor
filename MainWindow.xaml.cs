@@ -107,6 +107,8 @@ private void ApplyLocaleDictionary(ResourceDictionary resources, string locale)
                 RefreshVisualTreeResources(child);
             }
         }
+
+        // В будущем стоит обратить своё внимание на это
         private T FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
         {
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
