@@ -1,4 +1,5 @@
-﻿<Window x:Class="HollywoodEditor.PerksWindow"
+ <!-- Окно изменения портретов-->
+<Window x:Class="HollywoodEditor.PerksWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Perks Editor"
