@@ -68,22 +68,7 @@ namespace HollywoodEditor
                 MessageBox.Show(ex.Message, "Calculator", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-        private void Perks_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                var window = new PerksWindow();
-                window.Owner = this;
-                window.ShowDialog();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Perks", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void ApplyLocaleDictionary(ResourceDictionary resources, string locale)
+private void ApplyLocaleDictionary(ResourceDictionary resources, string locale)
         {
             if (resources == null) return;
 

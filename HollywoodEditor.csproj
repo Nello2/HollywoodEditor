@@ -55,7 +55,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-</PropertyGroup>
+  </PropertyGroup>
   <PropertyGroup>
     <StartupObject>HollywoodEditor.App</StartupObject>
     <ApplicationIcon>main.ico</ApplicationIcon>
@@ -178,6 +178,13 @@
     </None>
     <None Include="README.md" />
     <None Include="Resources\backgrnd.jpg.back" />
+    <Content Include="Resources\Buildings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\GameVariables.json" />
+    <Content Include="Resources\Perks.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Resources\Perk.png" />
     <Resource Include="Resources\calc.png" />
     <Content Include="Resources\Profiles.zip">
@@ -234,8 +241,8 @@
       <Version>13.0.4</Version>
     </PackageReference>
     <PackageReference Include="PropertyChanged.Fody" Version="4.1.0">
-		<PrivateAssets>all</PrivateAssets>
-	</PackageReference>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="System.ValueTuple">
       <Version>4.6.2</Version>
     </PackageReference>

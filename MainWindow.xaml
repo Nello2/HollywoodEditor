@@ -107,7 +107,7 @@
                    Margin="0,10,0,20" 
                    Stretch="Uniform"/>
 
-            <TextBlock Text="v0.2.5C for 0.8.70EA" 
+            <TextBlock Text="v0.2.5D for 0.8.71EA" 
                        Foreground="White" 
                        HorizontalAlignment="Center"
                        Margin="0,10,0,5"
@@ -1046,13 +1046,6 @@
                             </Button.Style>
                         </Button>
 
-                        <Button Width="25" Height="25"
-                            IsEnabled="{Binding Save_Loaded}"
-                            Click="Perks_Click"
-                            Margin="0,0,5,0"
-                            ToolTip="{DynamicResource PerksTooltip}">
-                            <Image Source="/Resources/Perk.png"/>
-                        </Button>
 
                         <Button Width="25" Height="25" 
                             IsEnabled="{Binding Save_Loaded}"

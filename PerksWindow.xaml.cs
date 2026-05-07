@@ -17,6 +17,7 @@ namespace HollywoodEditor
     public partial class PerksWindow : Window
     {
         private string configFilePath;
+        private bool closeOnLoaded;
         private JObject configData;
         private readonly List<PerkEditorItem> items = new List<PerkEditorItem>();
         private readonly List<Expander> visibleExpanders = new List<Expander>();
@@ -66,6 +67,7 @@ namespace HollywoodEditor
         {
             InitializeComponent();
             ApplyLocalization();
+            Loaded += PerksWindow_Loaded;
             FindAndLoadConfig();
         }
 
@@ -77,7 +79,7 @@ namespace HollywoodEditor
             CancelButton.Content = L("Cancel", "Отмена");
             ExpandAllButton.Content = L("Expand all", "Развернуть всё");
             CollapseAllButton.Content = L("Collapse all", "Свернуть всё");
-            ReloadButton.Content = L("Reload", "Перезагрузить");
+            ReloadButton.Content = L("Restore", "Восстановить");
             BulkTitleText.Text = L("Bulk edit", "Массовое изменение");
             ApplyToAllButton.Content = L("Apply to all", "Вставить во все");
             BulkValueBox.ToolTip = L("Enter a value. Example: 0.5", "Введите значение. Например: 0.5");
@@ -127,23 +129,35 @@ namespace HollywoodEditor
                     }
                     else
                     {
-                        DialogResult = false;
-                        Close();
+                        closeOnLoaded = true;
+                        CloseIfLoaded();
                     }
                 }
                 else
                 {
-                    DialogResult = false;
-                    Close();
+                    closeOnLoaded = true;
+                    CloseIfLoaded();
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(L("Error finding Perks.json:\n", "Ошибка поиска Perks.json:\n") + ex.Message,
                     L("Error", "Ошибка"), MessageBoxButton.OK, MessageBoxImage.Error);
-                DialogResult = false;
-                Close();
+                closeOnLoaded = true;
+                CloseIfLoaded();
             }
+        }
+
+        private void PerksWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (closeOnLoaded)
+                Close();
+        }
+
+        private void CloseIfLoaded()
+        {
+            if (IsLoaded)
+                Close();
         }
 
         private string FindConfigPath()
@@ -212,8 +226,8 @@ namespace HollywoodEditor
             {
                 MessageBox.Show(L("Error loading Perks.json:\n", "Ошибка загрузки Perks.json:\n") + ex.Message,
                     L("Error", "Ошибка"), MessageBoxButton.OK, MessageBoxImage.Error);
-                DialogResult = false;
-                Close();
+                closeOnLoaded = true;
+                CloseIfLoaded();
             }
         }
 
@@ -265,7 +279,7 @@ namespace HollywoodEditor
                 TextBlock domainHeader = new TextBlock
                 {
                     Text = GetDomainDisplayName(domainGroup.Key) + "  [" + domainGroup.Count() + "]",
-                    Foreground = Brushes.White,
+                    Foreground = System.Windows.Media.Brushes.White,
                     FontSize = 16,
                     FontWeight = FontWeights.Bold,
                     Margin = new Thickness(14, 10, 14, 8)
@@ -284,7 +298,7 @@ namespace HollywoodEditor
 
                     Border depHeader = new Border
                     {
-                        Background = new SolidColorBrush(Color.FromRgb(0xB8, 0x3A, 0x3A)),
+                        Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xB8, 0x3A, 0x3A)),
                         CornerRadius = new CornerRadius(7, 7, 0, 0),
                         Padding = new Thickness(10, 6, 10, 6)
                     };
@@ -293,7 +307,7 @@ namespace HollywoodEditor
                         Text = GetDepartmentIcon(depGroup.Key) + "  " + GetDepartmentDisplayName(depGroup.Key) + " [" + depGroup.Count() + "]",
                         FontWeight = FontWeights.Bold,
                         FontSize = 14,
-                        Foreground = Brushes.White
+                        Foreground = System.Windows.Media.Brushes.White
                     };
                     depStack.Children.Add(depHeader);
 
@@ -341,7 +355,7 @@ namespace HollywoodEditor
             return new Border
             {
                 BorderThickness = new Thickness(1),
-                BorderBrush = new SolidColorBrush(Color.FromRgb(0xA8, 0x30, 0x30)),
+                BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xA8, 0x30, 0x30)),
                 CornerRadius = new CornerRadius(10),
                 Margin = new Thickness(0, 0, 0, 14),
                 Background = new SolidColorBrush(Color.FromArgb(0x22, 0xAD, 0x38, 0x38))
@@ -353,7 +367,7 @@ namespace HollywoodEditor
             return new Border
             {
                 BorderThickness = new Thickness(1),
-                BorderBrush = new SolidColorBrush(Color.FromRgb(0xB8, 0x3A, 0x3A)),
+                BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xB8, 0x3A, 0x3A)),
                 CornerRadius = new CornerRadius(8),
                 Margin = new Thickness(10, 0, 10, 12),
                 Background = new SolidColorBrush(Color.FromArgb(0x33, 0x20, 0x08, 0x08))
@@ -364,14 +378,14 @@ namespace HollywoodEditor
         {
             Border card = new Border
             {
-                Width = 320,
+                Width = 360, // Было 320, увеличил до 360
                 MinHeight = 72,
                 Margin = new Thickness(6),
                 Padding = new Thickness(0),
                 CornerRadius = new CornerRadius(8),
                 BorderThickness = new Thickness(1),
-                BorderBrush = new SolidColorBrush(Color.FromRgb(0x7A, 0x2A, 0x2A)),
-                Background = new SolidColorBrush(Color.FromRgb(0x3B, 0x13, 0x13))
+                BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x7A, 0x2A, 0x2A)),
+                Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x3B, 0x13, 0x13))
             };
 
             Expander expander = new Expander
@@ -382,19 +396,19 @@ namespace HollywoodEditor
             };
             visibleExpanders.Add(expander);
 
-            StackPanel header = new StackPanel { Margin = new Thickness(4, 4, 8, 4), Width = 270 };
+            StackPanel header = new StackPanel { Margin = new Thickness(4, 4, 8, 4), Width = 310 }; // Было 270
             header.Children.Add(new TextBlock
             {
                 Text = perk.DisplayName,
                 FontWeight = FontWeights.SemiBold,
-                Foreground = Brushes.White,
+                Foreground = System.Windows.Media.Brushes.White,
                 TextWrapping = TextWrapping.Wrap,
                 FontSize = 13
             });
             header.Children.Add(new TextBlock
             {
                 Text = perk.Id,
-                Foreground = new SolidColorBrush(Color.FromRgb(0xC9, 0xB7, 0xB7)),
+                Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xC9, 0xB7, 0xB7)),
                 FontSize = 10,
                 TextWrapping = TextWrapping.Wrap,
                 Margin = new Thickness(0, 2, 0, 0)
@@ -409,8 +423,8 @@ namespace HollywoodEditor
         private UIElement CreatePerkEditor(PerkEditorItem perk)
         {
             Grid grid = new Grid { Margin = new Thickness(12, 6, 10, 12) };
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(138) });
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // Авто ширина для меток
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(160) }); // Фикс ширина 160 для полей
 
             int row = 0;
             foreach (JProperty prop in perk.Object.Properties().OrderBy(p => GetPropertyOrder(p.Name)).ThenBy(p => p.Name))
@@ -421,9 +435,12 @@ namespace HollywoodEditor
                 {
                     Content = GetPropertyDisplayName(prop.Name),
                     ToolTip = prop.Name,
-                    Foreground = Brushes.White,
-                    Margin = new Thickness(0, 3, 8, 3),
-                    Padding = new Thickness(0)
+                    Foreground = System.Windows.Media.Brushes.White,
+                    Margin = new Thickness(0, 3, 12, 3), // Отступ справа 12
+                    Padding = new Thickness(0),
+                    VerticalAlignment = VerticalAlignment.Center,
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    FontSize = 12
                 };
                 Grid.SetRow(label, row);
                 Grid.SetColumn(label, 0);
@@ -449,7 +466,8 @@ namespace HollywoodEditor
                 {
                     IsChecked = token.Value<bool>(),
                     VerticalAlignment = VerticalAlignment.Center,
-                    Margin = new Thickness(0, 5, 0, 5)
+                    Margin = new Thickness(0, 5, 0, 5),
+                    HorizontalAlignment = HorizontalAlignment.Left
                 };
                 check.Checked += delegate { prop.Value = true; };
                 check.Unchecked += delegate { prop.Value = false; };
@@ -460,7 +478,7 @@ namespace HollywoodEditor
             {
                 ComboBox combo = new ComboBox
                 {
-                    Width = 170,
+                    Width = 150,
                     HorizontalAlignment = HorizontalAlignment.Left,
                     IsEditable = true,
                     Text = token.Type == JTokenType.Null ? "" : token.ToString(),
@@ -484,7 +502,7 @@ namespace HollywoodEditor
             {
                 TextBox idBox = MakeTextBox(token, prop);
                 idBox.IsReadOnly = true;
-                idBox.Background = new SolidColorBrush(Color.FromRgb(0x2E, 0x2E, 0x2E));
+                idBox.Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x2E, 0x2E, 0x2E));
                 return idBox;
             }
 
@@ -499,15 +517,16 @@ namespace HollywoodEditor
             return new TextBox
             {
                 Text = TokenToEditorText(token),
-                MinWidth = 120,
-                MaxWidth = 185,
+                Width = 150, // Фиксированная ширина
                 HorizontalAlignment = HorizontalAlignment.Left,
                 AcceptsReturn = complex,
                 TextWrapping = complex ? TextWrapping.Wrap : TextWrapping.NoWrap,
-                MinHeight = complex ? 58 : 0,
+                MinHeight = complex ? 58 : 22,
                 VerticalScrollBarVisibility = complex ? ScrollBarVisibility.Auto : ScrollBarVisibility.Disabled,
                 Tag = prop,
-                Margin = new Thickness(0, 3, 0, 3)
+                Margin = new Thickness(0, 3, 0, 3),
+                FontSize = 11,
+                Padding = new Thickness(4, 2, 4, 2)
             };
         }
 
@@ -1675,10 +1694,36 @@ namespace HollywoodEditor
             foreach (Expander expander in visibleExpanders) expander.IsExpanded = false;
         }
 
-        private void Reload_Click(object sender, RoutedEventArgs e)
+        private void Restore_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(configFilePath) && File.Exists(configFilePath))
+            try
+            {
+                if (string.IsNullOrWhiteSpace(configFilePath))
+                {
+                    MessageBox.Show(L("First select Perks.json.", "Сначала выберите Perks.json."), L("Restore", "Восстановление"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                string sourcePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Perks.json");
+                if (!File.Exists(sourcePath))
+                {
+                    MessageBox.Show(L($"Perks.json was not found in Resources:\n{sourcePath}", $"Perks.json не найден в Resources:\n{sourcePath}"), L("Restore", "Восстановление"), MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                var result = MessageBox.Show(
+                    L("Replace current Perks.json with the file from Resources?", "Заменить текущий Perks.json файлом из Resources?"),
+                    L("Restore", "Восстановление"), MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result != MessageBoxResult.Yes) return;
+
+                File.Copy(sourcePath, configFilePath, true);
                 LoadConfig(configFilePath);
+                MessageBox.Show(L("Perks.json restored successfully.", "Perks.json успешно восстановлен."), L("Restore", "Восстановление"), MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(L("Restore error:\n", "Ошибка восстановления:\n") + ex.Message, L("Error", "Ошибка"), MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
