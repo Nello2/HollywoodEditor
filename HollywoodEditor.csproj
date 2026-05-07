@@ -181,7 +181,9 @@
     <Content Include="Resources\Buildings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Resources\GameVariables.json" />
+    <Content Include="Resources\GameVariables.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Perks.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
